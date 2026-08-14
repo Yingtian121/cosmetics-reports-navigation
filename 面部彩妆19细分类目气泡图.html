@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>抖音面部彩妆细分类目气泡图</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #1a1a2e;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  padding: 20px;
+}
+.container {
+  background: #16213e;
+  border-radius: 16px;
+  padding: 24px 28px 16px 28px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  width: 1100px;
+  max-width: 100%;
+}
+.header {
+  text-align: center;
+  margin-bottom: 14px;
+}
+.header h2 {
+  color: #e0e0e0;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+.header .subtitle {
+  color: #888;
+  font-size: 12px;
+  margin-top: 4px;
+}
+.chart-wrap {
+  position: relative;
+  width: 100%;
+  height: 680px;
+}
+canvas { width: 100% !important; height: 100% !important; }
+.legend-row {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #aaa;
+  font-size: 11px;
+}
+.legend-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  opacity: 0.85;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+.legend-dot.large { width: 16px; height: 16px; }
+.legend-dot.small { width: 6px; height: 6px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h2>抖音面部彩妆细分类目机会图谱</h2>
+    <div class="subtitle">横轴：销售额（对数刻度）&nbsp;|&nbsp;纵轴：同比增速&nbsp;|&nbsp;气泡大小：客单价&nbsp;|&nbsp;颜色：增速热度</div>
+  </div>
+  <div class="chart-wrap">
+    <canvas id="bubbleChart"></canvas>
+  </div>
+  <div class="legend-row">
+    <div class="legend-item"><div class="legend-dot large" style="background:#e74c3c;"></div> 高增速(>50%)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#f39c12;"></div> 中增速(15-50%)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#27ae60;"></div> 负增长/低增速</div>
+    <div class="legend-item"><div class="legend-dot large" style="background:rgba(231,76,60,0.5);"></div> 气泡大=客单价高</div>
+    <div class="legend-item"><div class="legend-dot small" style="background:rgba(243,156,18,0.5);"></div> 气泡小=客单价低</div>
+  </div>
+</div>
+
+<script>
+// ===== 原始数据 =====
+const rawData = [
+  { name: '粉底液/膏',         volume: 38714103, sales: 3288969595, growth: 26 },
+  { name: '气垫',              volume: 26088870, sales: 3456759488, growth: 42 },
+  { name: '粉饼',              volume: 22032028, sales: 1756636524, growth: 25 },
+  { name: '卸妆油/卸妆水/卸妆啫喱', volume: 20511332, sales: 1490154881, growth: 24 },
+  { name: '隔离/妆前',          volume: 23937896, sales: 1490154881, growth: 25 },
+  { name: '素颜霜',             volume: 21752252, sales: 1285968667, growth: 16 },
+  { name: '蜜粉/散粉',          volume: 12913595, sales:  961774498, growth: 24 },
+  { name: '定妆喷雾',           volume: 18618551, sales: 1090575044, growth: 46 },
+  { name: '遮瑕',              volume: 18039442, sales:  840125370, growth: 72 },
+  { name: '腮红/胭脂',          volume: 16612313, sales:  608979857, growth: 43 },
+  { name: '修容/阴影',          volume: 12755720, sales:  494617437, growth: 39 },
+  { name: '高光',              volume: 12415374, sales:  404084491, growth: 66 },
+  { name: 'BB霜',             volume:  2288354, sales:  170486163, growth: -22 },
+  { name: '卸妆巾',             volume:  2251385, sales:   58606310, growth: 37 },
+  { name: 'CC霜',             volume:   530048, sales:   30014341, growth: 119 },
+  { name: '定妆膏',             volume:    42458, sales:    2445582, growth: -32 },
+  { name: '有色面霜',           volume:   337966, sales:   29387202, growth: 7603 },
+  { name: '防晒底妆',           volume:    49333, sales:    3059449, growth: 3003 },
+  { name: '多用棒',             volume:    91957, sales:    3711197, growth: 46117 }
+];
+
+// Y轴偏移量（使所有值>0以适用对数刻度）
+const Y_OFFSET = 35;
+
+// ===== 计算衍生指标 =====
+const data = rawData.map(d => ({
+  name: d.name,
+  sales: d.sales,
+  growth: d.growth,
+  volume: d.volume,
+  asp: Math.round(d.sales / d.volume * 100) / 100,
+  // Y轴：growth + offset，用于对数刻度
+  yVal: d.growth + Y_OFFSET
+}));
+
+// 按销售额降序排列
+data.sort((a, b) => b.sales - a.sales);
+
+// ===== 颜色映射 =====
+function getColor(growth) {
+  if (growth > 100) return { bg: 'rgba(231, 76, 60, 0.78)', border: 'rgba(231, 76, 60, 0.95)' };
+  if (growth > 50)  return { bg: 'rgba(230, 126, 34, 0.78)', border: 'rgba(230, 126, 34, 0.95)' };
+  if (growth > 15)  return { bg: 'rgba(243, 156, 18, 0.72)', border: 'rgba(243, 156, 18, 0.90)' };
+  if (growth >= 0)  return { bg: 'rgba(241, 196, 15, 0.68)', border: 'rgba(241, 196, 15, 0.85)' };
+  if (growth > -25) return { bg: 'rgba(39, 174, 96, 0.65)', border: 'rgba(39, 174, 96, 0.85)' };
+  return { bg: 'rgba(39, 174, 96, 0.78)', border: 'rgba(39, 174, 96, 0.95)' };
+}
+
+// ===== 气泡半径：sqrt(ASP) * 1.8 =====
+function calcRadius(asp) {
+  return Math.sqrt(asp) * 1.8;
+}
+
+// ===== 构建 Chart.js 数据 =====
+const chartPoints = data.map((d, i) => {
+  const color = getColor(d.growth);
+  return {
+    x: d.sales,
+    y: d.yVal,
+    r: calcRadius(d.asp),
+    name: d.name,
+    growth: d.growth,
+    asp: d.asp,
+    sales: d.sales,
+    volume: d.volume,
+    bg: color.bg,
+    border: color.border,
+    idx: i
+  };
+});
+
+// ===== 标签引导线方向（角度deg, 距离px）=====
+// 精心设计避免重叠和交叉
+const labelOffsets = [
+  { angle: 115, dist: 90 },  // 0: 粉底液/膏 → 左上
+  { angle:  45, dist: 85 },  // 1: 气垫 → 右上
+  { angle:   5, dist: 80 },  // 2: 粉饼 → 右
+  { angle: 235, dist: 90 },  // 3: 卸妆油/卸妆水/卸妆啫喱 → 左下
+  { angle: 185, dist: 85 },  // 4: 隔离/妆前 → 左
+  { angle: 275, dist: 85 },  // 5: 素颜霜 → 下
+  { angle: 160, dist: 85 },  // 6: 蜜粉/散粉 → 左上偏左
+  { angle:  30, dist: 85 },  // 7: 定妆喷雾 → 右上
+  { angle:  65, dist: 80 },  // 8: 遮瑕 → 右上
+  { angle:  15, dist: 80 },  // 9: 腮红/胭脂 → 右偏上
+  { angle: 355, dist: 80 },  // 10: 修容/阴影 → 右偏下
+  { angle:  50, dist: 80 },  // 11: 高光 → 右上
+  { angle: 270, dist: 85 },  // 12: BB霜 → 下
+  { angle: 355, dist: 75 },  // 13: 卸妆巾 → 右
+  { angle:  20, dist: 80 },  // 14: CC霜 → 右上
+  { angle: 260, dist: 80 },  // 15: 定妆膏 → 左下
+  { angle: 355, dist: 85 },  // 16: 有色面霜 → 右
+  { angle: 345, dist: 85 },  // 17: 防晒底妆 → 右下
+  { angle:   5, dist: 105 }, // 18: 多用棒 → 右（远）
+];
+
+// ===== 构建 label offset dx,dy =====
+chartPoints.forEach((p, i) => {
+  const off = labelOffsets[i];
+  const rad = off.angle * Math.PI / 180;
+  p.labelDx = Math.cos(rad) * off.dist;
+  p.labelDy = -Math.sin(rad) * off.dist; // canvas Y轴向下
+});
+
+// ===== 自定义 Plugin: 引导线 + 标签 =====
+const leaderLinePlugin = {
+  id: 'leaderLines',
+  afterDatasetsDraw(chart) {
+    const ctx = chart.ctx;
+    const meta = chart.getDatasetMeta(0);
+    const xAxis = chart.scales.x;
+    const yAxis = chart.scales.y;
+
+    ctx.save();
+    chartPoints.forEach((p, i) => {
+      const el = meta.data[i];
+      if (!el) return;
+
+      // 气泡中心像素坐标
+      const cx = el.x;
+      const cy = el.y;
+      const r = el.options.radius || p.r;
+
+      // 标签锚点
+      const lx = cx + p.labelDx;
+      const ly = cy + p.labelDy;
+
+      // 引导线起点：气泡边缘
+      const angle = Math.atan2(ly - cy, lx - cx);
+      const edgeX = cx + Math.cos(angle) * (r + 4);
+      const edgeY = cy + Math.sin(angle) * (r + 4);
+
+      // 画引导线
+      ctx.beginPath();
+      ctx.moveTo(edgeX, edgeY);
+      ctx.lineTo(lx, ly);
+      ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+      ctx.lineWidth = 0.8;
+      ctx.setLineDash([3, 3]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // 端点小圆点
+      ctx.beginPath();
+      ctx.arc(lx, ly, 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,0.6)';
+      ctx.fill();
+
+      // 标签文字
+      const isRight = p.labelDx >= 0;
+      const textAlign = isRight ? 'left' : 'right';
+      const textX = isRight ? lx + 8 : lx - 8;
+      const textY = ly;
+
+      // 双行：品类名 + 数据
+      ctx.font = 'bold 11px -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif';
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = textAlign;
+      ctx.textBaseline = 'bottom';
+      ctx.fillText(p.name, textX, textY - 2);
+
+      // 第二行：增速 + 销售额
+      ctx.font = '10px -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif';
+      ctx.fillStyle = '#cccccc';
+      ctx.textBaseline = 'top';
+
+      let salesStr;
+      if (p.sales >= 1e9) salesStr = (p.sales / 1e8).toFixed(1) + '亿';
+      else if (p.sales >= 1e7) salesStr = (p.sales / 1e4).toFixed(0) + '万';
+      else salesStr = (p.sales / 1e4).toFixed(0) + '万';
+
+      const growthSign = p.growth >= 0 ? '+' : '';
+      ctx.fillText(growthSign + p.growth + '%  ' + salesStr, textX, textY + 1);
+    });
+    ctx.restore();
+  }
+};
+
+// ===== Chart.js 配置 =====
+const ctx = document.getElementById('bubbleChart').getContext('2d');
+
+new Chart(ctx, {
+  type: 'bubble',
+  data: {
+    datasets: [{
+      data: chartPoints.map(p => ({
+        x: p.x,
+        y: p.y,
+        r: p.r
+      })),
+      backgroundColor: chartPoints.map(p => p.bg),
+      borderColor: chartPoints.map(p => p.border),
+      borderWidth: 1.5,
+      hoverBorderWidth: 2.5,
+      hoverBorderColor: '#ffffff'
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: { duration: 800 },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: 'rgba(22,33,62,0.95)',
+        titleColor: '#ffffff',
+        bodyColor: '#dddddd',
+        borderColor: 'rgba(255,255,255,0.15)',
+        borderWidth: 1,
+        padding: 12,
+        titleFont: { size: 13, weight: 'bold' },
+        bodyFont: { size: 12 },
+        callbacks: {
+          title(ctx) {
+            return chartPoints[ctx[0].dataIndex].name;
+          },
+          label(ctx) {
+            const p = chartPoints[ctx.dataIndex];
+            const sign = p.growth >= 0 ? '+' : '';
+            const salesStr = p.sales >= 1e8 ? (p.sales / 1e8).toFixed(2) + '亿' : (p.sales / 1e4).toFixed(0) + '万';
+            return [
+              '增速: ' + sign + p.growth + '%',
+              '销售额: ' + salesStr,
+              '销量: ' + (p.volume / 1e4).toFixed(0) + '万',
+              '客单价: ¥' + p.asp.toFixed(0)
+            ];
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        type: 'logarithmic',
+        title: {
+          display: true,
+          text: '销售额（元）',
+          color: '#999',
+          font: { size: 12 }
+        },
+        grid: { color: 'rgba(255,255,255,0.06)' },
+        ticks: {
+          color: '#888',
+          font: { size: 10 },
+          callback(value) {
+            if (value >= 1e8) return (value / 1e8).toFixed(0) + '亿';
+            if (value >= 1e7) return (value / 1e7).toFixed(0) + '千万';
+            if (value >= 1e4) return (value / 1e4).toFixed(0) + '万';
+            return value;
+          }
+        },
+        min: 1000000,    // 100万
+        max: 5000000000  // 50亿
+      },
+      y: {
+        type: 'logarithmic',
+        title: {
+          display: true,
+          text: '同比增速',
+          color: '#999',
+          font: { size: 12 }
+        },
+        grid: { color: 'rgba(255,255,255,0.06)' },
+        ticks: {
+          color: '#888',
+          font: { size: 10 },
+          callback(value) {
+            const growth = value - Y_OFFSET;
+            // 在关键刻度显示标签
+            const keyTicks = [-30, -20, -10, 0, 10, 25, 50, 100, 200, 500, 1000, 5000, 50000];
+            for (const t of keyTicks) {
+              if (Math.abs(growth - t) < Math.max(1, Math.abs(t) * 0.05)) {
+                return growth >= 0 ? '+' + growth + '%' : growth + '%';
+              }
+            }
+            return '';
+          }
+        },
+        min: 2,
+        max: 60000,
+        afterBuildTicks(axis) {
+          // 手动设置刻度值
+          const keyGrowthRates = [-30, -20, -10, 0, 10, 25, 50, 100, 200, 500, 1000, 5000, 50000];
+          axis.ticks = keyGrowthRates.map(g => ({
+            value: g + Y_OFFSET,
+            major: g === 0 || g === 100 || g === 1000
+          }));
+        }
+      }
+    }
+  },
+  plugins: [leaderLinePlugin]
+});
+</script>
+</body>
+</html>

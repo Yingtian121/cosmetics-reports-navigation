@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>彩妆品类销量-销售额气泡图</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: #f5f5f5;
+    display: flex; justify-content: center; align-items: center; min-height: 100vh;
+    padding: 24px;
+  }
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    border: 0.5px solid rgba(0,0,0,0.1);
+    padding: 24px 28px;
+    max-width: 780px;
+    width: 100%;
+  }
+  h2 { font-size: 17px; font-weight: 500; color: #2C2C2A; margin-bottom: 4px; }
+  .subtitle { font-size: 13px; color: #888780; margin-bottom: 20px; }
+  .chart-wrap { position: relative; width: 100%; height: 420px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 14px; font-size: 12px; color: #5F5E5A; }
+  .legend span { display: flex; align-items: center; gap: 6px; }
+  .legend-dot { width: 11px; height: 11px; border-radius: 50%; }
+  .footer { font-size: 12px; color: #888780; margin-top: 14px; border-top: 0.5px solid rgba(0,0,0,0.08); padding-top: 12px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h2>彩妆品类销量-销售额气泡图</h2>
+  <p class="subtitle">X轴：销量合计 · Y轴：销售额合计 · 气泡大小：销售额同比增速</p>
+  <div class="chart-wrap">
+    <canvas id="bubbleChart" role="img" aria-label="彩妆品类气泡图：X轴为销量合计，Y轴为销售额合计，气泡大小和颜色代表销售额同比增速">彩妆品类气泡图</canvas>
+  </div>
+  <div class="legend">
+    <span><span class="legend-dot" style="background:#534AB7;"></span>美容工具 21.2%</span>
+    <span><span class="legend-dot" style="background:#D4537E;"></span>面部彩妆 16.8%</span>
+    <span><span class="legend-dot" style="background:#D85A30;"></span>眼部彩妆 25.5%</span>
+    <span><span class="legend-dot" style="background:#185FA5;"></span>唇部彩妆 14.5%</span>
+  </div>
+  <p class="footer">数据说明：气泡大小代表销售额同比增速，气泡越大增速越高。</p>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+  var ctx = document.getElementById('bubbleChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bubble',
+    data: {
+      datasets: [
+        {
+          label: '美容工具',
+          data: [{ x: 45162282, y: 1226078248, r: 42 }],
+          backgroundColor: 'rgba(83, 74, 183, 0.55)',
+          borderColor: '#534AB7',
+          borderWidth: 1.5
+        },
+        {
+          label: '面部彩妆',
+          data: [{ x: 42036653, y: 5106488584, r: 34 }],
+          backgroundColor: 'rgba(212, 83, 126, 0.55)',
+          borderColor: '#D4537E',
+          borderWidth: 1.5
+        },
+        {
+          label: '眼部彩妆',
+          data: [{ x: 20149167, y: 974427598, r: 51 }],
+          backgroundColor: 'rgba(216, 90, 48, 0.55)',
+          borderColor: '#D85A30',
+          borderWidth: 1.5
+        },
+        {
+          label: '唇部彩妆',
+          data: [{ x: 14948970, y: 1414048697, r: 29 }],
+          backgroundColor: 'rgba(24, 95, 165, 0.55)',
+          borderColor: '#185FA5',
+          borderWidth: 1.5
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              var raw = ctx.raw;
+              var sales = (raw.x / 10000).toFixed(0) + '万';
+              var revenue = (raw.y / 100000000).toFixed(2) + '亿';
+              var growthMap = {
+                '美容工具': '21.2%', '面部彩妆': '16.8%',
+                '眼部彩妆': '25.5%', '唇部彩妆': '14.5%'
+              };
+              return [
+                ctx.dataset.label,
+                '销量: ' + sales,
+                '销售额: ' + revenue,
+                '同比增速: ' + growthMap[ctx.dataset.label]
+              ];
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: '销量合计', font: { size: 13, weight: '500' }, color: '#444441' },
+          ticks: {
+            callback: function(v) { return (v / 10000).toFixed(0) + '万'; },
+            font: { size: 11 }, color: '#5F5E5A'
+          },
+          grid: { color: 'rgba(0,0,0,0.06)' },
+          min: 8000000, max: 53000000
+        },
+        y: {
+          title: { display: true, text: '销售额合计', font: { size: 13, weight: '500' }, color: '#444441' },
+          ticks: {
+            callback: function(v) { return (v / 100000000).toFixed(1) + '亿'; },
+            font: { size: 11 }, color: '#5F5E5A'
+          },
+          grid: { color: 'rgba(0,0,0,0.06)' },
+          min: 500000000, max: 5700000000
+        }
+      }
+    }
+  });
+</script>
+</body>
+</html>

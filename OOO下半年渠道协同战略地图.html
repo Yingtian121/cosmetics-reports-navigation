@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OOO 7月渠道协同策略方向</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; background: #faf9f6; color: #2c2c2c; line-height: 1.75; padding: 20px; }
+  .container { max-width: 1080px; margin: 0 auto; }
+
+  .header { text-align: center; padding: 40px 32px 34px; background: linear-gradient(135deg, #1a1a1a 0%, #2d2010 100%); color: #f5e6c8; border-radius: 16px 16px 0 0; }
+  .header h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+  .header .sub { font-size: 13px; color: #c8a96e; }
+  .header .meta { margin-top: 12px; font-size: 11.5px; color: #8a7a5a; line-height: 1.9; }
+
+  .banner { background: #fff; border: 1px solid #e8e6e1; border-top: none; border-radius: 0 0 12px 12px; padding: 16px 24px; }
+  .banner .t { font-size: 12px; font-weight: 700; color: #c8851e; margin-bottom: 4px; }
+  .banner .d { font-size: 12.5px; color: #555; line-height: 1.9; }
+
+  .section { background: #fff; border-radius: 12px; padding: 24px 28px; margin-top: 16px; border: 1px solid #e8e6e1; }
+  .section-title { font-size: 17px; font-weight: 700; margin-bottom: 4px; padding-left: 12px; border-left: 4px solid #c8851e; }
+  .section-desc { font-size: 12px; color: #888; margin-bottom: 16px; padding-left: 12px; }
+
+  /* 双引擎 */
+  .engine { border-radius: 12px; padding: 20px 22px; margin-bottom: 16px; }
+  .engine:last-child { margin-bottom: 0; }
+  .engine.leg1 { background: linear-gradient(135deg, #fdf6e9 0%, #fdf1dd 100%); border: 1px solid #f0e2c8; }
+  .engine.leg2 { background: linear-gradient(135deg, #f2f6f8 0%, #e9f0f4 100%); border: 1px solid #d5e2e9; }
+  .engine .tag { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 12px; border-radius: 10px; color: #fff; margin-bottom: 10px; }
+  .engine.leg1 .tag { background: #c8851e; }
+  .engine.leg2 .tag { background: #3a6b8a; }
+  .engine .name { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .engine .goal { font-size: 12px; color: #777; margin-bottom: 12px; }
+  .engine .flow { display: flex; flex-direction: column; gap: 0; }
+  .engine .step { display: flex; align-items: center; gap: 12px; background: #fff; border-radius: 8px; padding: 10px 14px; border: 1px solid #eee; }
+  .engine .step .ch { font-size: 11.5px; font-weight: 700; color: #fff; padding: 3px 10px; border-radius: 6px; white-space: nowrap; min-width: 64px; text-align: center; }
+  .engine .step .role { font-size: 12.5px; color: #333; }
+  .engine .step .role b { font-size: 12.5px; }
+  .engine .arrow { text-align: center; color: #c8851e; font-size: 16px; line-height: 1.4; font-weight: 700; }
+  .engine.leg2 .arrow { color: #3a6b8a; }
+
+  /* 渠道色 */
+  .ch.self { background: #d4533a; }
+  .ch.ds { background: #5a8a3a; }
+  .ch.db { background: #3a6b8a; }
+  .ch.grass { background: #8a5aa8; }
+
+  /* 矩阵表 */
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  th { background: #f5f3ef; padding: 9px 12px; text-align: left; font-weight: 600; color: #555; border-bottom: 2px solid #e8e6e1; font-size: 12px; }
+  td { padding: 10px 12px; border-bottom: 1px solid #f0eee9; vertical-align: top; }
+  tr:hover td { background: #faf8f4; }
+  .ch-tag { display: inline-block; font-size: 11px; font-weight: 700; color: #fff; padding: 2px 10px; border-radius: 6px; white-space: nowrap; }
+
+  /* 渠道协同 */
+  .cards { display: grid; grid-template-columns: 1fr; gap: 12px; }
+  .card { background: #fdf9f0; border: 1px solid #f0e2c8; border-radius: 10px; padding: 14px 18px; }
+  .card .t { font-size: 13px; font-weight: 700; color: #c8851e; margin-bottom: 4px; }
+  .card .d { font-size: 12.5px; color: #555; line-height: 1.85; }
+
+  .insight { background: #fdf6e9; border-left: 4px solid #c8851e; border-radius: 8px; padding: 12px 18px; }
+  .insight .t { font-weight: 700; color: #c8851e; font-size: 12.5px; margin-bottom: 4px; }
+  .insight .d { font-size: 12.5px; color: #555; line-height: 1.85; }
+
+  /* 节奏 */
+  .timeline { display: flex; flex-direction: column; gap: 0; }
+  .tl-item { display: flex; gap: 16px; position: relative; padding-bottom: 18px; }
+  .tl-item:last-child { padding-bottom: 0; }
+  .tl-dot { flex-shrink: 0; width: 12px; height: 12px; border-radius: 50%; background: #c8851e; margin-top: 6px; position: relative; z-index: 1; }
+  .tl-item::before { content: ''; position: absolute; left: 5px; top: 18px; bottom: -2px; width: 2px; background: #e8e6e1; }
+  .tl-item:last-child::before { display: none; }
+  .tl-body .t { font-size: 13.5px; font-weight: 700; }
+  .tl-body .d { font-size: 12.5px; color: #666; margin-top: 2px; line-height: 1.8; }
+
+  .footer { text-align: center; padding: 18px; font-size: 11.5px; color: #999; background: #fff; border-radius: 0 0 12px 12px; border: 1px solid #e8e6e1; border-top: none; margin-bottom: 20px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <h1>OOO 7月渠道协同策略方向</h1>
+  <div class="sub">市场端打底 × 渠道双引擎 · 三端协同 · 渠道协同 · 各展所长</div>
+  <div class="meta">覆盖端口：市场端 / 自播 / 达播 / 达短 / 种草 | 战略周期：2026年7月起 | 依据：6-7月渠道表现复盘</div>
+</div>
+
+<div class="banner">
+  <div class="t">战略出发点</div>
+  <div class="d">6-7月复盘显示：<b>达播和自播在货盘机制上容易对冲，形成内部的无效损耗</b>；同时下半年达播、达短、自播（内容电商）三渠道均面临巨大生意压力，<b>品牌大爆品也面临增长瓶颈</b>。结论：<b>市场端以品牌故事打底、营造全渠道营销氛围，渠道端协同互补、各展所长，两条腿走路</b>——一条腿守住修容笔基本盘（自播×达短×种草协同），另一条腿靠新品打爆能力开拓新战场（达播×达短共振）。</div>
+</div>
+
+<!-- 市场端 -->
+<div class="section">
+  <div class="section-title">市场端 · 品牌故事引擎（全渠道氛围底座）</div>
+  <div class="section-desc">大爆品面临瓶颈期，市场端不再追求单纯的曝光量级，而是讲好故事、引发心智共振，为所有销售渠道做好基础且重要的营销氛围</div>
+
+  <div class="engine leg1">
+    <div class="tag">市场端 · 营销氛围引擎</div>
+    <div class="name">讲好 OOO 品牌故事 / 修容笔的故事</div>
+    <div class="goal">触发背景：品牌大爆品面临瓶颈，增长不能只靠爆品带货，需要品牌故事提供新的叙事势能</div>
+    <div class="flow">
+      <div class="step"><span class="ch grass">故事方向一</span><div class="role"><b>新妆容故事</b>——以 OOO 产品新妆容为载体，讲"妆容即表达"的故事</div></div>
+      <div class="arrow">↓</div>
+      <div class="step"><span class="ch grass">故事方向二</span><div class="role"><b>品牌升级故事</b>——以品牌升级为叙事主线，重塑品牌心智与调性</div></div>
+    </div>
+  </div>
+
+  <div class="engine leg2">
+    <div class="tag">标杆目标 · 对标 25年 Jaden 式传播事件</div>
+    <div class="name">打造品牌&产品心智导向的长效营销传播事件</div>
+    <div class="goal">持续塑造品牌&产品故事，为品牌获取长效流量，为全渠道供给品牌势能与内容素材</div>
+    <div class="cards" style="margin-top:0;">
+      <div class="card"><div class="t">✗ 不是</div><div class="d">短时间的曝光量级增加——流量来得快去得也快，对品牌资产无沉淀。</div></div>
+      <div class="card"><div class="t">✓ 而是</div><div class="d">通过 OOO 产品新妆容 / 品牌升级的故事，<b>引发核心目标人群的心智共振</b>，塑造更具品牌力的营销传播事件，为品牌获取长效流量——为各销售渠道做好基础且重要的营销氛围。</div></div>
+    </div>
+  </div>
+
+  <div class="insight" style="margin-top:14px;"><div class="t">市场端 × 渠道端协同</div><div class="d">市场端造势（品牌故事事件）→ 种草 / 达短承接内容放大 → 自播 / 达播承接转化——市场端为渠道双引擎持续供给品牌势能，让所有渠道的营销动作建立在统一的品牌叙事之上。</div></div>
+</div>
+
+<!-- 双引擎 -->
+<div class="section">
+  <div class="section-title">核心战略：渠道双引擎 · 两条腿走路</div>
+  <div class="section-desc">在市场端品牌氛围的底座上，两个引擎并行推进，互不冲突、互为支撑，共同支撑下半年三渠道生意目标</div>
+
+  <div class="engine leg1">
+    <div class="tag">引擎一 · 修容笔基本盘</div>
+    <div class="name">第一条腿：种草 → 达短 → 自播 协同收割</div>
+    <div class="goal">修容笔：达短 + 种草做前端人群种草与心智植入，为自播导流；自播专注承接转化</div>
+    <div class="flow">
+      <div class="step"><span class="ch grass">种草</span><div class="role"><b>心智植入</b>——前端人群种草，进一步植入修容笔心智</div></div>
+      <div class="arrow">↓</div>
+      <div class="step"><span class="ch ds">达短</span><div class="role"><b>放量曝光 + 导流</b>——保证利润（OP）前提下不过分追求利润，做好前端放量与曝光，为自播导流</div></div>
+      <div class="arrow">↓</div>
+      <div class="step"><span class="ch self">自播</span><div class="role"><b>承接转化</b>——承接达短 + 种草带来的流量与心智，稳定转化、完成成交</div></div>
+    </div>
+  </div>
+
+  <div class="engine leg2">
+    <div class="tag">引擎二 · 新品增长极</div>
+    <div class="name">第二条腿：达播 × 达短 新品打爆，开拓新战场</div>
+    <div class="goal">修容笔以外的高潜力类目：达播做新品的"大而多"，达短与其协同共振，下半年集中新品打爆</div>
+    <div class="flow">
+      <div class="step"><span class="ch db">达播</span><div class="role"><b>新品爆发引擎</b>——修容笔大专场做少做精；<b>其它高潜力类目做大做多</b>，集中资源打爆新品</div></div>
+      <div class="arrow">⟷ 协同共振</div>
+      <div class="step"><span class="ch ds">达短</span><div class="role"><b>新品放大器</b>——在其它高潜力类目与达播形成协同共振，共同打爆新品</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 渠道定位 -->
+<div class="section">
+  <div class="section-title">端口定位划分：各司其职</div>
+  <div class="section-desc">市场端打底 + 四个销售渠道明确分工——谁造势、谁做心智、谁做曝光、谁做转化、谁做爆发</div>
+  <table>
+    <thead><tr><th style="width:14%">端口</th><th style="width:20%">角色定位</th><th>修容笔（基本盘）职责</th><th>新品（增长极）职责</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><span class="ch-tag" style="background:#8a5aa8;">市场端</span></td>
+        <td><b>品牌故事引擎 · 营销氛围底座</b></td>
+        <td>讲好修容笔 / 品牌故事（新妆容 / 品牌升级），引发心智共振，为全渠道造势（对标 25年 Jaden 式事件）</td>
+        <td>以品牌故事为新品打爆提供叙事势能与营销氛围</td>
+      </tr>
+      <tr>
+        <td><span class="ch-tag self">自播</span></td>
+        <td><b>转化收割主阵地</b></td>
+        <td>承接达短 + 种草导流，稳定转化成交，守住修容笔基本盘</td>
+        <td>承接达播新品打爆后的热度与需求</td>
+      </tr>
+      <tr>
+        <td><span class="ch-tag db">达播</span></td>
+        <td><b>新品爆发引擎</b></td>
+        <td>修容笔大专场<b>做少做精</b>（避免与自播同盘竞争）</td>
+        <td>其它高潜力类目<b>做大做多</b>，集中新品打爆</td>
+      </tr>
+      <tr>
+        <td><span class="ch-tag ds">达短</span></td>
+        <td><b>前端种草 + 放量放大器</b></td>
+        <td>前端人群种草、心智植入；保利润前提下放量曝光，<b>为自播导流</b></td>
+        <td>与达播协同共振，共同打爆高潜力类目新品</td>
+      </tr>
+      <tr>
+        <td><span class="ch-tag grass">种草</span></td>
+        <td><b>心智植入前端</b></td>
+        <td>修容笔前端人群种草，心智进一步植入</td>
+        <td>（视新品节奏协同）</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 渠道协同 -->
+<div class="section">
+  <div class="section-title">渠道协同机制：避免货盘内部竞争</div>
+  <div class="section-desc">核心问题：6-7月达播与自播在货盘机制上容易对冲，形成内部的无效损耗——需从机制上规避</div>
+  <div class="cards">
+    <div class="card"><div class="t">① 货盘差异定位</div><div class="d">修容笔以<b>自播</b>为主力渠道承接转化，达播收缩修容笔专场（少而精），从货盘机制上避免两个渠道抢同一盘生意。</div></div>
+    <div class="card"><div class="t">② 渠道优势发挥</div><div class="d">修容笔转化以<b>自播</b>为主力、种草导流以<b>达短 + 种草</b>为主力、爆发打新以<b>达播</b>为主力——<b>每个渠道只做自己最擅长的事</b>，不越位、不重复。</div></div>
+    <div class="card"><div class="t">③ 战场错位开辟</div><div class="d">为<b>其它高潜力类目新品</b>增加对应资源投入，达播 + 达短协同打爆，打开增量空间。</div></div>
+  </div>
+</div>
+
+<!-- 落地节奏 -->
+<div class="section">
+  <div class="section-title">下半年落地节奏</div>
+  <div class="section-desc">市场端造势与渠道双引擎并行推进，分阶段卡位</div>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-body">
+        <div class="t">立即可做 · 协同路径跑通 + 品牌故事企划</div>
+        <div class="d">修容笔启动「种草 → 达短 → 自播」导流链路；达播修容笔专场收敛为少而精；市场端启动品牌故事（新妆容 / 品牌升级）企划，明确对标 25年 Jaden 式事件的目标人群与心智诉求。</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-body">
+        <div class="t">7-9月 · 市场造势 + 双引擎并行</div>
+        <div class="d">引擎一：达短 + 种草持续为自播导流，巩固修容笔基本盘；引擎二：达播在其它高潜力类目排兵布阵，与达短协同共振试水新品；市场端：首发品牌故事事件，为全渠道营造营销氛围。</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-body">
+        <div class="t">9-11月 · 集中新品打爆 + 品牌事件共振</div>
+        <div class="d">达播 + 达短集中资源打爆高潜力类目新品，卡位双11前窗口；市场端以品牌升级 / 新妆容故事第二波事件共振，为打爆提供叙事势能。</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-body">
+        <div class="t">全年目标 · 三渠道各自达成</div>
+        <div class="d">达播 / 达短 / 自播在各自优势位完成下半年生意目标；市场端沉淀品牌资产——渠道协同、各展所长，市场 × 渠道三端走完整年。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">OOO 7月渠道协同策略方向 | 战略周期：2026年7月起 | 内部策略规划</div>
+</div>
+</body>
+</html>

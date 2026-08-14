@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>彩妆全类目销售额&销量柱状图</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: #f5f5f5;
+    display: flex; justify-content: center; align-items: flex-start; min-height: 100vh;
+    padding: 24px;
+  }
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    border: 0.5px solid rgba(0,0,0,0.1);
+    padding: 24px 28px;
+    max-width: 1000px;
+    width: 100%;
+  }
+  h2 { font-size: 17px; font-weight: 500; color: #2C2C2A; margin-bottom: 4px; }
+  .subtitle { font-size: 13px; color: #888780; margin-bottom: 20px; }
+  .chart-wrap { position: relative; width: 100%; height: 600px; }
+  .legend-custom {
+    display: flex; justify-content: center; gap: 32px; margin-top: 16px;
+    font-size: 13px; color: #444441;
+  }
+  .legend-custom span { display: flex; align-items: center; gap: 8px; }
+  .legend-dot { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
+  .footer { font-size: 12px; color: #888780; margin-top: 14px; border-top: 0.5px solid rgba(0,0,0,0.08); padding-top: 12px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h2>彩妆全类目销售额 & 销量对比</h2>
+  <p class="subtitle">按销售额从高到低排列 · 左侧：销量（万件）· 右侧：销售额（亿元）</p>
+  <div class="chart-wrap">
+    <canvas id="barChart" role="img" aria-label="彩妆全类目销售额和销量柱状图">彩妆全类目销售额和销量柱状图</canvas>
+  </div>
+  <div class="legend-custom">
+    <span><span class="legend-dot" style="background:rgba(216,90,48,0.65);border:1px solid #D85A30"></span> 销量（万件）</span>
+    <span><span class="legend-dot" style="background:rgba(83,74,183,0.75);border:1px solid #534AB7"></span> 销售额（亿元）</span>
+  </div>
+  <p class="footer">美容工具销量最大（4516 万件）但客单价低，销售额仅排第四。面部彩妆销售额 51.1 亿远超其他品类。</p>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+  var raw = [
+    { name: '美容工具',             sales: 1226078248, volume: 45162282 },
+    { name: '面部彩妆',             sales: 5106488584, volume: 42036653 },
+    { name: '眼部彩妆',             sales: 974427598,  volume: 20149167 },
+    { name: '唇部彩妆',             sales: 1414048697, volume: 14948970 },
+    { name: '香水/香水用品',        sales: 1319325377, volume: 6752741  },
+    { name: '指甲油/美甲产品（新）',sales: 172728211,  volume: 6365445  },
+    { name: '美甲工具',             sales: 114281575,  volume: 5057139  },
+    { name: '彩妆套装（新）',       sales: 443786263,  volume: 2730629  },
+    { name: '旅行装/体验装',        sales: 39727587,   volume: 2495650  },
+    { name: '男士彩妆（新）',       sales: 43790049,   volume: 593670   },
+    { name: '美甲灯/美甲机',        sales: 8161585,    volume: 234763   },
+    { name: '其它彩妆',             sales: 6101096,    volume: 122389   },
+    { name: '身体彩妆',             sales: 379287,     volume: 11345    }
+  ];
+
+  // Sort by sales descending
+  raw.sort(function(a, b) { return b.sales - a.sales; });
+
+  var labels = raw.map(function(d) { return d.name; });
+  var salesData  = raw.map(function(d) { return d.sales / 100000000; });  // 亿元
+  var volumeData = raw.map(function(d) { return -(d.volume / 10000); }); // 万件，负值表示左侧
+
+  var ctx = document.getElementById('barChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: '销量（万件）',
+          data: volumeData,
+          backgroundColor: 'rgba(216, 90, 48, 0.65)',
+          borderColor: '#D85A30',
+          borderWidth: 1,
+          borderRadius: { topLeft: 0, bottomLeft: 4, topRight: 4, bottomRight: 0 },
+          borderSkipped: false,
+          yAxisID: 'y',
+          xAxisID: 'x'
+        },
+        {
+          label: '销售额（亿元）',
+          data: salesData,
+          backgroundColor: 'rgba(83, 74, 183, 0.75)',
+          borderColor: '#534AB7',
+          borderWidth: 1,
+          borderRadius: { topLeft: 4, bottomLeft: 0, topRight: 0, bottomRight: 4 },
+          borderSkipped: false,
+          yAxisID: 'y',
+          xAxisID: 'x1'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      indexAxis: 'y',
+      layout: {
+        padding: { top: 10, right: 20, bottom: 10, left: 20 }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              var item = raw[ctx.dataIndex];
+              if (ctx.dataset.label === '销量（万件）') {
+                return '销量: ' + (item.volume / 10000).toFixed(0) + '万件';
+              } else {
+                return '销售额: ' + (item.sales / 100000000).toFixed(2) + '亿';
+              }
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: '销量（万件）', font: { size: 13, weight: '500' }, color: '#D85A30' },
+          position: 'bottom',
+          stacked: false,
+          ticks: {
+            callback: function(v) { return Math.abs(v) + '万'; },
+            font: { size: 11 }, color: '#D85A30'
+          },
+          grid: { color: 'rgba(0,0,0,0.06)' },
+          reverse: true,
+          min: -5000,
+          max: 0
+        },
+        x1: {
+          title: { display: true, text: '销售额（亿元）', font: { size: 13, weight: '500' }, color: '#534AB7' },
+          position: 'bottom',
+          stacked: false,
+          ticks: {
+            callback: function(v) { return v.toFixed(0) + '亿'; },
+            font: { size: 11 }, color: '#534AB7'
+          },
+          grid: { drawOnChartArea: false },
+          min: 0,
+          max: 55
+        },
+        y: {
+          ticks: {
+            font: { size: 12 }, color: '#2C2C2A'
+          },
+          grid: { display: false }
+        }
+      }
+    }
+  });
+</script>
+</body>
+</html>

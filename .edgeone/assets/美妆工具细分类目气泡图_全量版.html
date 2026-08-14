@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>美妆工具细分类目气泡图</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#fff;font-family:'PingFang SC','Microsoft YaHei','Helvetica Neue',sans-serif;padding:20px}
+  .container{max-width:1600px;margin:0 auto}
+  h2{text-align:center;color:#333;font-size:22px;margin-bottom:8px}
+  .subtitle{text-align:center;color:#888;font-size:13px;margin-bottom:10px}
+  .legend{display:flex;justify-content:center;gap:30px;margin-bottom:10px;font-size:13px;color:#555}
+  .legend-item{display:flex;align-items:center;gap:6px}
+  .legend-dot{width:14px;height:14px;border-radius:50%;display:inline-block}
+  .dot-red{background:rgba(231,76,60,0.45);border:1.5px solid rgba(231,76,60,0.85)}
+  .dot-green{background:rgba(39,174,96,0.45);border:1.5px solid rgba(39,174,96,0.85)}
+  .chart-container{position:relative;height:880px;width:100%}
+  .note{margin-top:12px;color:#aaa;font-size:12px;line-height:1.7}
+</style>
+</head>
+<body>
+<div class="container">
+  <h2>美妆工具细分类目气泡图</h2>
+  <div class="subtitle">横轴：销售额（对数轴）｜纵轴：销售额同比增速（对数压缩）｜气泡大小：客单价</div>
+  <div class="legend">
+    <div class="legend-item"><span class="legend-dot dot-red"></span>正增长</div>
+    <div class="legend-item"><span class="legend-dot dot-green"></span>负增长</div>
+  </div>
+  <div class="chart-container">
+    <canvas id="chart"></canvas>
+  </div>
+  <div class="note">
+    注：纵轴采用 sign(y)×log₁₀(|y|+1) 变换处理极端增速（如面部贴纸/彩绘/花钿 +4585万%、化妆印章 +32.6万%），刻度标签已还原为实际增速百分比。气泡越大代表客单价越高。
+  </div>
+</div>
+<script>
+// ============ 原始数据（22个细分类目，按用户给定的原始顺序） ============
+const rawData = [
+  { name:'假睫毛',                vol:53272213, sales:974220019, growth:0.254499078 },
+  { name:'面扑/粉扑',              vol:18435737, sales:378564274, growth:0.392162624 },
+  { name:'化妆/美容工具',          vol:12063061, sales:260057298, growth:-0.006574467 },
+  { name:'洗脸刷/化妆刷',          vol:10517477, sales:218539090, growth:0.336003628 },
+  { name:'双眼皮贴',              vol:13301559, sales:170692068, growth:0.402511263 },
+  { name:'化妆套刷',              vol:4130661,  sales:130079148, growth:0.286384234 },
+  { name:'睫毛卷翘工具/睫毛夹',    vol:2905655,  sales:69781921,  growth:1.03032429 },
+  { name:'假睫毛胶水',            vol:3180788,  sales:63498416,  growth:0.130143567 },
+  { name:'镊子/粉刺针/细胞夹',     vol:3396408,  sales:48278439,  growth:0.157598487 },
+  { name:'DIY面膜工具',           vol:961126,   sales:49022485,  growth:1.984461376 },
+  { name:'卸妆棉/化妆棉',          vol:2355484,  sales:41040848,  growth:-0.179237178 },
+  { name:'美妆蛋/化妆海绵',        vol:2102674,  sales:39812673,  growth:3.532063477 },
+  { name:'假睫毛辅助工具',         vol:1841103,  sales:33419040,  growth:-0.514744939 },
+  { name:'修眉刀',                vol:4578078,  sales:32140702,  growth:0.080858052 },
+  { name:'化妆印章',              vol:379702,   sales:25671031,  growth:3257.158523 },
+  { name:'化妆包/刷包',            vol:324455,   sales:19799687,  growth:1.582965983 },
+  { name:'吸油纸',                vol:847470,   sales:19458503,  growth:0.264204341 },
+  { name:'粉扑/化妆刷清洁剂',      vol:689278,   sales:11565583,  growth:3.034470044 },
+  { name:'面部贴纸/彩绘/花钿',     vol:1042133,  sales:13755399,  growth:458512.3 },
+  { name:'双眼皮胶水',            vol:178068,   sales:3517012,   growth:0.385670553 },
+  { name:'耳贴/耳挂',             vol:169676,   sales:2431240,   growth:10.73344401 },
+  { name:'面膜碗',                vol:20197,    sales:457988,    growth:2.693749496 },
+];
+
+// ============ 工具函数 ============
+function transformY(growthDecimal) {
+  const pct = growthDecimal * 100;
+  if (pct >= 0) return Math.log10(pct + 1);
+  return -Math.log10(-pct + 1);
+}
+
+function calcASP(item) { return item.sales / item.vol; }
+
+function formatGrowth(g) {
+  const pct = g * 100;
+  const sign = pct > 0 ? '+' : '';
+  const abs = Math.abs(pct);
+  if (abs >= 100000000) return sign + (pct / 100000000).toFixed(1) + '亿%';
+  if (abs >= 10000)     return sign + (pct / 10000).toFixed(1) + '万%';
+  return sign + pct.toFixed(2) + '%';
+}
+
+function formatSales(v) {
+  if (v >= 1e8) return (v / 1e8).toFixed(2) + '亿';
+  if (v >= 1e4) return Math.round(v / 1e4) + '万';
+  return v.toString();
+}
+
+function formatVol(v) {
+  if (v >= 1e8) return (v / 1e8).toFixed(2) + '亿';
+  if (v >= 1e4) return Math.round(v / 1e4) + '万';
+  return v.toLocaleString();
+}
+
+// ============ 客单价 → 气泡半径映射 ============
+const aspVals = rawData.map(calcASP);
+const minASP = Math.min(...aspVals);
+const maxASP = Math.max(...aspVals);
+function aspToRadius(asp) {
+  return 7 + (asp - minASP) / (maxASP - minASP) * 28;
+}
+
+// ============ 引导线偏移（像素，相对气泡圆心） ============
+// 22条引导线方向各异，避免交叉/穿越气泡
+const leaderOffsets = [
+  /*  0 假睫毛               */ { dx:  65, dy:  28 },
+  /*  1 面扑/粉扑             */ { dx:  65, dy: -28 },
+  /*  2 化妆/美容工具         */ { dx:  65, dy:   8 },
+  /*  3 洗脸刷/化妆刷         */ { dx: -68, dy: -38 },
+  /*  4 双眼皮贴              */ { dx:   8, dy: -58 },
+  /*  5 化妆套刷              */ { dx: -68, dy:  28 },
+  /*  6 睫毛卷翘工具/睫毛夹   */ { dx:  58, dy: -32 },
+  /*  7 假睫毛胶水            */ { dx:  58, dy:  32 },
+  /*  8 DIY面膜工具           */ { dx: -70, dy: -42 },
+  /*  9 镊子/粉刺针/细胞夹    */ { dx: -70, dy:  22 },
+  /* 10 卸妆棉/化妆棉          */ { dx: -62, dy:  28 },
+  /* 11 美妆蛋/化妆海绵        */ { dx:   8, dy: -58 },
+  /* 12 假睫毛辅助工具         */ { dx:   8, dy:  48 },
+  /* 13 修眉刀                */ { dx: -65, dy:  18 },
+  /* 14 化妆印章               */ { dx:  60, dy:   0 },
+  /* 15 化妆包/刷包            */ { dx:  58, dy:  30 },
+  /* 16 吸油纸                */ { dx: -68, dy:  -8 },
+  /* 17 粉扑/化妆刷清洁剂      */ { dx:  58, dy: -32 },
+  /* 18 面部贴纸/彩绘/花钿     */ { dx: -62, dy:   0 },
+  /* 19 双眼皮胶水             */ { dx: -58, dy: -32 },
+  /* 20 耳贴/耳挂              */ { dx:  55, dy:  30 },
+  /* 21 面膜碗                */ { dx: -58, dy:  30 },
+];
+
+// ============ 引导线+标签 插件 ============
+const leaderLinePlugin = {
+  id: 'leaderLines',
+  afterDatasetsDraw(chart) {
+    const ctx = chart.ctx;
+    const meta = chart.getDatasetMeta(0);
+    if (!meta) return;
+
+    rawData.forEach((item, i) => {
+      const el = meta.data[i];
+      if (!el) return;
+      const px = el.x, py = el.y, r = el.options.radius;
+      const off = leaderOffsets[i];
+
+      // 起点：气泡边缘
+      const ang = Math.atan2(off.dy, off.dx);
+      const sx = px + Math.cos(ang) * r;
+      const sy = py + Math.sin(ang) * r;
+      // 终点
+      const ex = px + off.dx;
+      const ey = py + off.dy;
+
+      // 画引导线
+      ctx.save();
+      ctx.strokeStyle = '#bbb';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(sx, sy);
+      ctx.lineTo(ex, ey);
+      ctx.stroke();
+
+      // 画标签文字（仅品类名称，无外框）
+      ctx.font = '12.5px "PingFang SC","Microsoft YaHei",sans-serif';
+      ctx.fillStyle = '#333';
+      let tx, ty, ta, tb;
+      if (off.dx > 8) {
+        ta = 'left';  tb = 'middle'; tx = ex + 5; ty = ey;
+      } else if (off.dx < -8) {
+        ta = 'right'; tb = 'middle'; tx = ex - 5; ty = ey;
+      } else {
+        ta = 'center';
+        if (off.dy < -8) { tb = 'bottom'; tx = ex; ty = ey - 3; }
+        else             { tb = 'top';    tx = ex; ty = ey + 3; }
+      }
+      ctx.textAlign = ta;
+      ctx.textBaseline = tb;
+      ctx.fillText(item.name, tx, ty);
+      ctx.restore();
+    });
+  }
+};
+
+// ============ 创建图表 ============
+const ctx = document.getElementById('chart').getContext('2d');
+new Chart(ctx, {
+  type: 'bubble',
+  data: {
+    datasets: [{
+      data: rawData.map(item => ({
+        x: item.sales,
+        y: transformY(item.growth),
+        _name: item.name,
+        _vol: item.vol,
+        _sales: item.sales,
+        _growth: item.growth,
+        _asp: calcASP(item),
+      })),
+      backgroundColor: rawData.map(item =>
+        item.growth >= 0 ? 'rgba(231,76,60,0.40)' : 'rgba(39,174,96,0.40)'
+      ),
+      borderColor: rawData.map(item =>
+        item.growth >= 0 ? 'rgba(231,76,60,0.85)' : 'rgba(39,174,96,0.85)'
+      ),
+      borderWidth: 1.5,
+      radius: rawData.map(item => aspToRadius(calcASP(item))),
+      hoverRadius: rawData.map(item => aspToRadius(calcASP(item)) + 2),
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    layout: { padding: { top: 25, right: 130, bottom: 25, left: 25 } },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        titleFont: { size: 14, weight: 'bold' },
+        bodyFont: { size: 13 },
+        padding: 10,
+        boxPadding: 5,
+        callbacks: {
+          title: (items) => items[0].raw._name,
+          label: (item) => {
+            const d = item.raw;
+            return [
+              '销售额：' + formatSales(d._sales),
+              '销量：' + formatVol(d._vol),
+              '增速：' + formatGrowth(d._growth),
+              '客单价：¥' + d._asp.toFixed(1),
+            ];
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        type: 'logarithmic',
+        min: 300000,
+        max: 1200000000,
+        title: { display: true, text: '销售额（元）', font: { size: 14 }, color: '#555' },
+        ticks: {
+          callback: function(value) {
+            if (value >= 1e8) return (value / 1e8).toFixed(1) + '亿';
+            if (value >= 1e4) return Math.round(value / 1e4) + '万';
+            return '';
+          },
+          font: { size: 11 },
+          color: '#777',
+          maxRotation: 0,
+        },
+        grid: { color: 'rgba(0,0,0,0.05)' }
+      },
+      y: {
+        type: 'linear',
+        min: -2,
+        max: 8,
+        title: { display: true, text: '销售额同比增速', font: { size: 14 }, color: '#555' },
+        ticks: {
+          stepSize: 1,
+          callback: function(value) {
+            if (value === 0) return '0%';
+            let pct;
+            if (value > 0) pct = Math.pow(10, value) - 1;
+            else           pct = -(Math.pow(10, -value) - 1);
+            const sign = pct > 0 ? '+' : '';
+            if (Math.abs(pct) >= 10000) return sign + (Math.abs(pct) / 10000).toFixed(0) + '万%';
+            return sign + Math.abs(pct).toFixed(0) + '%';
+          },
+          font: { size: 11 },
+          color: '#777',
+        },
+        grid: {
+          color: function(ctx) {
+            if (ctx.tick.value === 0) return 'rgba(0,0,0,0.18)';
+            return 'rgba(0,0,0,0.05)';
+          },
+          lineWidth: function(ctx) {
+            return ctx.tick.value === 0 ? 1.5 : 1;
+          }
+        }
+      }
+    }
+  },
+  plugins: [leaderLinePlugin]
+});
+</script>
+</body>
+</html>

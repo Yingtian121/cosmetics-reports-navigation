@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>抖音面部彩妆细分类目机会分析</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #0f0f1a;
+  color: #d0d0d0;
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  padding: 24px;
+  line-height: 1.7;
+}
+.container { max-width: 980px; margin: 0 auto; }
+
+h1 { color: #fff; font-size: 22px; text-align: center; margin-bottom: 6px; letter-spacing: 1px; }
+h1 .sub { display: block; font-size: 13px; color: #777; font-weight: 400; margin-top: 4px; }
+h2 {
+  color: #e8e8e8; font-size: 16px; margin: 32px 0 14px 0;
+  padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+h3 { color: #ccc; font-size: 14px; margin: 18px 0 8px 0; }
+
+/* KPI cards */
+.kpi-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 20px; }
+.kpi-card {
+  flex: 1; min-width: 140px; background: #1a1a2e;
+  border-radius: 10px; padding: 16px; text-align: center;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.kpi-card .val { font-size: 26px; font-weight: 700; color: #fff; }
+.kpi-card .lab { font-size: 11px; color: #888; margin-top: 4px; }
+.kpi-card.up .val { color: #e74c3c; }
+.kpi-card.down .val { color: #27ae60; }
+
+/* Tables */
+table {
+  width: 100%; border-collapse: collapse; margin: 12px 0 20px 0;
+  font-size: 12px;
+}
+th, td { padding: 8px 10px; text-align: right; }
+th { color: #999; font-weight: 500; border-bottom: 1px solid rgba(255,255,255,0.1); }
+td { border-bottom: 1px solid rgba(255,255,255,0.04); color: #ccc; }
+tr:hover td { background: rgba(255,255,255,0.03); }
+td:first-child, th:first-child { text-align: left; }
+td:nth-child(2), th:nth-child(2) { text-align: left; }
+
+.tag {
+  display: inline-block; padding: 2px 8px; border-radius: 10px;
+  font-size: 11px; font-weight: 500;
+}
+.tag-red { background: rgba(231,76,60,0.2); color: #e74c3c; }
+.tag-orange { background: rgba(230,126,34,0.2); color: #e67e22; }
+.tag-green { background: rgba(39,174,96,0.2); color: #27ae60; }
+.tag-yellow { background: rgba(241,196,15,0.2); color: #f1c40f; }
+.tag-gray { background: rgba(255,255,255,0.08); color: #888; }
+
+/* Opportunity cards */
+.opp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 12px; margin: 14px 0; }
+.opp-card {
+  background: #1a1a2e; border-radius: 10px; padding: 16px;
+  border-left: 3px solid; border-color: rgba(255,255,255,0.1);
+}
+.opp-card.t1 { border-left-color: #e74c3c; background: rgba(231,76,60,0.06); }
+.opp-card.t2 { border-left-color: #f39c12; background: rgba(243,156,18,0.05); }
+.opp-card.t3 { border-left-color: #3498db; background: rgba(52,152,219,0.04); }
+.opp-card.t4 { border-left-color: #888; background: rgba(255,255,255,0.02); }
+.opp-card .cat-name { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.opp-card .cat-meta { font-size: 11px; color: #888; margin-bottom: 8px; }
+.opp-card .cat-reason { font-size: 12px; color: #bbb; line-height: 1.6; }
+
+/* Theme block */
+.theme-block {
+  background: #1a1a2e; border-radius: 10px; padding: 18px;
+  border: 1px solid rgba(255,255,255,0.06); margin-bottom: 14px;
+}
+.theme-block h4 { color: #f39c12; font-size: 14px; margin-bottom: 6px; }
+.theme-block p { font-size: 12px; color: #bbb; line-height: 1.7; }
+.theme-block .evidence { color: #888; font-size: 11px; margin-top: 6px; font-style: italic; }
+
+/* Matrix visualization */
+.matrix-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  margin: 14px 0;
+}
+.matrix-cell {
+  background: #1a1a2e; border-radius: 10px; padding: 16px;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.matrix-cell h4 { font-size: 13px; margin-bottom: 8px; }
+.matrix-cell ul { list-style: none; padding: 0; }
+.matrix-cell li { font-size: 12px; padding: 4px 0; color: #bbb; border-bottom: 1px solid rgba(255,255,255,0.03); }
+.matrix-cell li .m { color: #e74c3c; font-weight: 600; }
+.matrix-cell.q1 { background: rgba(231,76,60,0.05); border-color: rgba(231,76,60,0.15); }
+.matrix-cell.q1 h4 { color: #e74c3c; }
+.matrix-cell.q2 { background: rgba(243,156,18,0.05); border-color: rgba(243,156,18,0.15); }
+.matrix-cell.q2 h4 { color: #f39c12; }
+.matrix-cell.q3 { background: rgba(52,152,219,0.04); border-color: rgba(52,152,219,0.12); }
+.matrix-cell.q3 h4 { color: #3498db; }
+.matrix-cell.q4 { background: rgba(255,255,255,0.02); border-color: rgba(255,255,255,0.06); }
+.matrix-cell.q4 h4 { color: #888; }
+
+.footnote { color: #666; font-size: 11px; margin-top: 24px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.05); }
+
+.highlight { color: #e74c3c; font-weight: 600; }
+.green { color: #27ae60; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>抖音面部彩妆细分类目机会分析<span class="sub">19个细分类目 · 独立分析 · 与前序报告无关</span></h1>
+
+<!-- KPI -->
+<div class="kpi-row">
+  <div class="kpi-card"><div class="val">174.67亿</div><div class="lab">总销售额</div></div>
+  <div class="kpi-card up"><div class="val">+32.9%</div><div class="lab">加权增速（剔除低基数）</div></div>
+  <div class="kpi-card"><div class="val">¥84.96</div><div class="lab">最高客单价（粉底液/膏）</div></div>
+  <div class="kpi-card up"><div class="val">¥132.50</div><div class="lab">最高ASP（气垫）</div></div>
+  <div class="kpi-card"><div class="val">6个</div><div class="lab">增速>40%品类</div></div>
+</div>
+
+<!-- ====== 第一层：梯队分层 ====== -->
+<h2>一、梯队分层与数据总览</h2>
+
+<table>
+<thead>
+<tr><th>梯队</th><th>细分类目</th><th>销售额</th><th>占比</th><th>销量</th><th>同比增速</th><th>客单价</th></tr>
+</thead>
+<tbody>
+<tr><td rowspan="3"><span class="tag tag-red">T1 超级大单品<br>&gt;10%</span></td>
+  <td>气垫</td><td>34.57亿</td><td>19.8%</td><td>2,609万</td><td><span class="highlight">+42%</span></td><td>¥132.50</td></tr>
+<tr><td>粉底液/膏</td><td>32.89亿</td><td>18.8%</td><td>3,871万</td><td>+26%</td><td>¥84.96</td></tr>
+<tr><td>粉饼</td><td>17.57亿</td><td>10.1%</td><td>2,203万</td><td>+25%</td><td>¥79.73</td></tr>
+
+<tr><td rowspan="5"><span class="tag tag-orange">T2 腰部支柱<br>5-10%</span></td>
+  <td>卸妆油/卸妆水/卸妆啫喱</td><td>14.90亿</td><td>8.5%</td><td>2,051万</td><td>+24%</td><td>¥72.65</td></tr>
+<tr><td>隔离/妆前</td><td>14.90亿</td><td>8.5%</td><td>2,394万</td><td>+25%</td><td>¥62.25</td></tr>
+<tr><td>素颜霜</td><td>12.86亿</td><td>7.4%</td><td>2,175万</td><td>+16%</td><td>¥59.12</td></tr>
+<tr><td>定妆喷雾</td><td>10.91亿</td><td>6.2%</td><td>1,862万</td><td><span class="highlight">+46%</span></td><td>¥58.58</td></tr>
+<tr><td>蜜粉/散粉</td><td>9.62亿</td><td>5.5%</td><td>1,291万</td><td>+24%</td><td>¥74.48</td></tr>
+
+<tr><td rowspan="4"><span class="tag tag-yellow">T3 增长驱动<br>1-5%</span></td>
+  <td>遮瑕</td><td>8.40亿</td><td>4.8%</td><td>1,804万</td><td><span class="highlight">+72%</span></td><td>¥46.57</td></tr>
+<tr><td>腮红/胭脂</td><td>6.09亿</td><td>3.5%</td><td>1,661万</td><td><span class="highlight">+43%</span></td><td>¥36.66</td></tr>
+<tr><td>修容/阴影</td><td>4.95亿</td><td>2.8%</td><td>1,276万</td><td>+39%</td><td>¥38.77</td></tr>
+<tr><td>高光</td><td>4.04亿</td><td>2.3%</td><td>1,242万</td><td><span class="highlight">+66%</span></td><td>¥32.55</td></tr>
+
+<tr><td rowspan="7"><span class="tag tag-gray">T4 边缘/新兴<br>&lt;1%</span></td>
+  <td>BB霜</td><td>1.70亿</td><td>1.0%</td><td>229万</td><td><span class="green">-22%</span></td><td>¥74.50</td></tr>
+<tr><td>卸妆巾</td><td>0.59亿</td><td>0.3%</td><td>225万</td><td>+37%</td><td>¥26.03</td></tr>
+<tr><td>CC霜</td><td>0.30亿</td><td>0.2%</td><td>53万</td><td>+119%</td><td>¥56.63</td></tr>
+<tr><td>有色面霜</td><td>0.29亿</td><td>0.2%</td><td>34万</td><td><span class="tag tag-red">+7603%</span></td><td>¥86.95</td></tr>
+<tr><td>多用棒</td><td>0.04亿</td><td>0.02%</td><td>9万</td><td><span class="tag tag-red">+46117%</span></td><td>¥40.36</td></tr>
+<tr><td>防晒底妆</td><td>0.03亿</td><td>0.02%</td><td>5万</td><td><span class="tag tag-red">+3003%</span></td><td>¥62.02</td></tr>
+<tr><td>定妆膏</td><td>0.02亿</td><td>0.01%</td><td>4万</td><td><span class="green">-32%</span></td><td>¥57.60</td></tr>
+
+<tr style="font-weight:700; background:rgba(255,255,255,0.04);">
+  <td colspan="2">合计（13主流品类）</td><td>173.39亿</td><td>99.3%</td><td>—</td><td><span class="highlight">+32.9%</span></td><td>—</td></tr>
+</tbody>
+</table>
+
+<p style="font-size:11px; color:#666; margin-top:-12px;">
+加权增速 = Σ(各品类销售额 × 增速) ÷ 总销售额，已剔除有色面霜/防晒底妆/多用棒/CC霜/卸妆巾/定妆膏等<1000万且增速失真的小基数品类。
+</p>
+
+<!-- ====== 第二层：2×2矩阵 ====== -->
+<h2>二、品类卡位矩阵（2×2）</h2>
+<p style="font-size:12px; color:#888; margin-bottom:10px;">横轴：销售额体量（占比）；纵轴：同比增速。气泡大小≈客单价。已剔除6个低基数边缘品类。</p>
+
+<div class="matrix-grid">
+  <div class="matrix-cell q1">
+    <h4>⬆ 右上：高增长大单品 — 核心进攻区</h4>
+    <ul>
+      <li><b>气垫</b> <span class="m">19.8% / +42%</span> — 最大体量仍保持高增速，底妆升级绝对龙头</li>
+      <li><b>定妆喷雾</b> <span class="m">6.2% / +46%</span> — 腰部品类中超预期增长，品类迁移红利</li>
+    </ul>
+  </div>
+  <div class="matrix-cell q2">
+    <h4>⬆ 左上：高增长小品类 — 潜力爆发区</h4>
+    <ul>
+      <li><b>遮瑕</b> <span class="m">4.8% / +72%</span> — 增速王（主流品类），短视频美妆教程直接拉动</li>
+      <li><b>高光</b> <span class="m">2.3% / +66%</span> — 内容营销红利，修容套装连带</li>
+      <li><b>腮红/胭脂</b> <span class="m">3.5% / +43%</span> — 色彩消费升级，客单价提升空间大</li>
+      <li><b>修容/阴影</b> <span class="m">2.8% / +39%</span> — 与高光形成组合需求</li>
+    </ul>
+  </div>
+  <div class="matrix-cell q3">
+    <h4>⬇ 右下：稳健大单品 — 基本盘防守</h4>
+    <ul>
+      <li><b>粉底液/膏</b> <span class="m">18.8% / +26%</span> — 底妆基座，低于大盘均值但体量巨大</li>
+      <li><b>粉饼</b> <span class="m">10.1% / +25%</span> — 定妆+补妆场景稳定</li>
+      <li><b>卸妆油/水/啫喱</b> <span class="m">8.5% / +24%</span> — 刚需品类，创新空间有限</li>
+      <li><b>隔离/妆前</b> <span class="m">8.5% / +25%</span> — 妆前步骤固化，跟随底妆大盘</li>
+      <li><b>蜜粉/散粉</b> <span class="m">5.5% / +24%</span> — 定妆场景受定妆喷雾分流</li>
+      <li><b>素颜霜</b> <span class="m">7.4% / +16%</span> — 增速最低的主流品类，概念老化</li>
+    </ul>
+  </div>
+  <div class="matrix-cell q4">
+    <h4>⬇ 左下：衰退/边缘 — 不推荐</h4>
+    <ul>
+      <li><b>BB霜</b> <span class="green">1.0% / -22%</span> — 被气垫全面替代，不可逆衰退</li>
+      <li><b>定妆膏</b> <span class="green">0.01% / -32%</span> — 被定妆喷雾淘汰</li>
+      <li><b>CC霜/有色面霜/多用棒/防晒底妆</b> — 体量<3000万，无实质意义</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ====== 第三层：跨品类主题 ====== -->
+<h2>三、跨品类结构性主题</h2>
+
+<div class="theme-block">
+  <h4>主题一：底妆"气垫化"——不可逆的产品形态迁移</h4>
+  <p>
+  气垫（+42%，34.6亿，ASP ¥132.50）全方位碾压传统粉底液/膏（+26%，32.9亿，ASP ¥84.96）。气垫以更高客单价实现更快增长，说明消费者正在为"便捷+妆效升级"支付溢价。<br>
+  BB霜（-22%）作为气垫的前身形态已被彻底替代；隔离/妆前（+25%）作为底妆前步骤跟随大盘，自身无独立增长驱动力。<br>
+  <b>底层逻辑：</b>气垫正在完成"底妆使用场景的重新定义"——从"在家用刷具上妆"到"随时随地补妆"。
+  </p>
+  <div class="evidence">证据链：①气垫增速(+42%)是粉底液(+26%)的1.6倍；②气垫客单价(¥132.50)比粉底液(¥84.96)高56%；③BB霜持续负增长(-22%)</div>
+</div>
+
+<div class="theme-block">
+  <h4>主题二：定妆赛道结构分化——喷雾崛起，粉质守成</h4>
+  <p>
+  定妆喷雾（+46%，10.9亿，ASP ¥58.58）增速显著高于蜜粉/散粉（+24%，9.6亿，ASP ¥74.48）和粉饼（+25%，17.6亿，ASP ¥79.73）。<br>
+  喷雾替代的不是散粉的使用场景，而是<b>在散粉之上叠加了"定妆持久"的增量需求</b>——"三明治定妆法"（喷雾→散粉→喷雾）在短视频平台流行，推动喷雾成为新增量品类。<br>
+  <b>关键判断：</b>定妆喷雾不是抢散粉的份额，而是做大定妆总盘子。粉质定妆（散粉+粉饼）合计27.2亿仍是主力，但增速承压。
+  </p>
+  <div class="evidence">证据链：①定妆喷雾(+46%) vs 散粉(+24%) vs 粉饼(+25%)三者均为正增长，无相互蚕食信号；②定妆膏(-32%)证明品类形态决定命运</div>
+</div>
+
+<div class="theme-block">
+  <h4>主题三：面部修饰四品类——短视频驱动的"第二张脸"经济</h4>
+  <p>
+  遮瑕（+72%）、高光（+66%）、腮红（+43%）、修容（+39%）——四个品类合计23.5亿（13.5%），加权增速约+55%，是面部彩妆中增速最快的板块。<br>
+  <b>底层逻辑：</b>底妆解决"均匀肤色"（基础需求），面部修饰解决"立体精致"（进阶需求）。短视频美妆教程（"直角肩修容""盒型鼻影""膨胀色腮红"）持续制造新概念，推动品类渗透率提升。<br>
+  四个品类的客单价集中在¥32-47区间，属于"低单价高频次"的冲动消费品类，天然适合抖音直播/短视频带货。
+  </p>
+  <div class="evidence">证据链：①四品类加权增速+55%远超面部彩妆整体+32.9%；②客单价均低于¥50，属于低决策成本品类；③增速排序与短视频热度高度一致（遮瑕>高光>腮红>修容）</div>
+</div>
+
+<div class="theme-block">
+  <h4>主题四：卸妆——天花板已现的刚需品类</h4>
+  <p>
+  卸妆油/卸妆水/卸妆啫喱（+24%，14.9亿）作为第三大品类，增速低于加权均值（+32.9%）。卸妆巾（+37%）体量仅0.59亿。<br>
+  <b>本质：</b>卸妆是化妆的"附属消耗品"，增速天然受限于化妆人群的渗透率天花板。品类内部形态竞争（油 vs 水 vs 啫喱 vs 巾）是零和博弈，不创造增量。
+  </p>
+  <div class="evidence">证据链：①卸妆品类增速(+24%)低于面部彩妆加权增速(+32.9%)；②销量2051万 vs 隔离2394万，但ASP接近，说明非价格驱动</div>
+</div>
+
+<!-- ====== 第四层：机会排序 ====== -->
+<h2>四、机会排序与投资建议</h2>
+
+<div class="opp-grid">
+
+  <div class="opp-card t1">
+    <div class="cat-name">🥇 遮瑕</div>
+    <div class="cat-meta">销售额 8.40亿（4.8%） | 增速 +72% | ASP ¥46.57</div>
+    <div class="cat-reason">
+      <b>核心逻辑：</b>抖音"无瑕底妆"教程密集轰炸，"遮瑕+粉底"组合已成标配步骤。+72%增速在主流品类中最高，且8.4亿的体量说明这不是小基数效应。<br>
+      <b>风险：</b>低客单价（¥46.57）限制利润空间，需走量。
+    </div>
+  </div>
+
+  <div class="opp-card t1">
+    <div class="cat-name">🥈 气垫</div>
+    <div class="cat-meta">销售额 34.57亿（19.8%） | 增速 +42% | ASP ¥132.50</div>
+    <div class="cat-reason">
+      <b>核心逻辑：</b>既是最大单品又保持高增速（罕见组合），证明品类生命周期的"成长期"远未结束。最高客单价（¥132.50）说明消费者支付意愿强。<br>
+      <b>突破口：</b>色号细分、功效叠加（养肤气垫、防晒气垫）、使用场景拓宽。
+    </div>
+  </div>
+
+  <div class="opp-card t1">
+    <div class="cat-name">🥉 定妆喷雾</div>
+    <div class="cat-meta">销售额 10.91亿（6.2%） | 增速 +46% | ASP ¥58.58</div>
+    <div class="cat-reason">
+      <b>核心逻辑：</b>品类结构性迁移的最大受益者。"三明治定妆法"在短视频平台形成方法论共识，喷雾从"可选"变为"必选"。<br>
+      <b>天花板：</b>当前定妆总盘（喷雾+散粉+粉饼）约38亿，喷雾渗透率仍不到30%。
+    </div>
+  </div>
+
+  <div class="opp-card t2">
+    <div class="cat-name">高光</div>
+    <div class="cat-meta">销售额 4.04亿（2.3%） | 增速 +66% | ASP ¥32.55</div>
+    <div class="cat-reason">
+      <b>核心逻辑：</b>增速排名第二（剔除低基数品类），短视频"水光肌""韩系高光"等概念持续制造需求。当前体量小意味着成长空间大。<br>
+      <b>风险：</b>客单价最低（¥32.55），毛利压力大。
+    </div>
+  </div>
+
+  <div class="opp-card t2">
+    <div class="cat-name">腮红/胭脂</div>
+    <div class="cat-meta">销售额 6.09亿（3.5%） | 增速 +43% | ASP ¥36.66</div>
+    <div class="cat-reason">
+      <b>核心逻辑：</b>"氛围感妆容"（纯欲腮红、宿醉腮红）在抖音持续走红，色彩类彩妆有天然的内容传播优势。6亿体量有继续成长空间。<br>
+      <b>突破口：</b>多色盘、膏状腮红（多用棒逻辑）。
+    </div>
+  </div>
+
+  <div class="opp-card t2">
+    <div class="cat-name">修容/阴影</div>
+    <div class="cat-meta">销售额 4.95亿（2.8%） | 增速 +39% | ASP ¥38.77</div>
+    <div class="cat-reason">
+      <b>核心逻辑：</b>修容教程是抖音美妆区最热门内容之一，"盒型鼻""下颌线修容"等概念持续教育市场。与高光形成"买一搭一"的连带消费。<br>
+      <b>风险：</b>使用门槛高于高光/腮红，复购率可能较低。
+    </div>
+  </div>
+
+</div>
+
+<div class="opp-grid" style="grid-template-columns: 1fr 1fr;">
+  <div class="opp-card t3">
+    <div class="cat-name">隔离/妆前</div>
+    <div class="cat-meta">销售额 14.90亿（8.5%） | 增速 +25% | ASP ¥62.25</div>
+    <div class="cat-reason">刚需品类但增速接近大盘均值，无独立增长故事。受益于底妆大盘扩大，但自身创新空间有限。"妆前乳+粉底"组合是确定性需求。</div>
+  </div>
+  <div class="opp-card t3">
+    <div class="cat-name">蜜粉/散粉</div>
+    <div class="cat-meta">销售额 9.62亿（5.5%） | 增速 +24% | ASP ¥74.48</div>
+    <div class="cat-reason">定妆场景仍大但增速低于喷雾。需警惕定妆喷雾的长期分流效应。短期受益于定妆大盘扩大，但产品形态可能面临升级压力。</div>
+  </div>
+  <div class="opp-card t3">
+    <div class="cat-name">粉底液/膏</div>
+    <div class="cat-meta">销售额 32.89亿（18.8%） | 增速 +26% | ASP ¥84.96</div>
+    <div class="cat-reason">底妆基座不可撼动，但增速低于气垫。核心策略是"守份额"而非"抢增量"。粉底液到气垫的品类迁移是长期趋势。</div>
+  </div>
+  <div class="opp-card t3">
+    <div class="cat-name">粉饼</div>
+    <div class="cat-meta">销售额 17.57亿（10.1%） | 增速 +25% | ASP ¥79.73</div>
+    <div class="cat-reason">定妆+补妆双场景支撑，稳健但缺乏爆发力。相对于定妆喷雾，粉饼的便携补妆属性是差异化优势。</div>
+  </div>
+</div>
+
+<div class="opp-grid" style="grid-template-columns: 1fr 1fr;">
+  <div class="opp-card t4">
+    <div class="cat-name">⚠️ BB霜 / 定妆膏</div>
+    <div class="cat-meta">增速 -22% / -32%</div>
+    <div class="cat-reason"><b>不推荐。</b>被替代品类，处于不可逆衰退。BB霜被气垫替代，定妆膏被定妆喷雾淘汰。资源应向气垫和定妆喷雾转移。</div>
+  </div>
+  <div class="opp-card t4">
+    <div class="cat-name">⚠️ 极低基数品类</div>
+    <div class="cat-meta">有色面霜 / 防晒底妆 / 多用棒 / CC霜 / 定妆膏</div>
+    <div class="cat-reason"><b>不做判断。</b>5个品类合计仅1.27亿（0.7%），增速因低基数严重失真（7603%/3003%/46117%），无实质分析意义。可关注但不宜投入资源。</div>
+  </div>
+</div>
+
+<!-- ====== 总结 ====== -->
+<h2>五、结论总结</h2>
+
+<table>
+<thead>
+<tr><th>优先级</th><th>品类</th><th>机会定性</th><th>核心依据</th></tr>
+</thead>
+<tbody>
+<tr><td><span class="tag tag-red">强烈推荐</span></td><td>遮瑕</td><td>短视频红利 + 品类渗透率提升</td><td>+72%增速，8.4亿体量，非小基数</td></tr>
+<tr><td><span class="tag tag-red">强烈推荐</span></td><td>气垫</td><td>品类形态替代 + 客单价升级</td><td>最大体量×高增速，ASP最高</td></tr>
+<tr><td><span class="tag tag-red">强烈推荐</span></td><td>定妆喷雾</td><td>品类结构迁移 + 增量需求</td><td>+46%增速，渗透率<30%</td></tr>
+<tr><td><span class="tag tag-orange">推荐</span></td><td>高光</td><td>内容红利 + 连带消费</td><td>+66%增速，当前体量小空间大</td></tr>
+<tr><td><span class="tag tag-orange">推荐</span></td><td>腮红/胭脂</td><td>色彩消费升级</td><td>+43%增速，6亿体量有成长空间</td></tr>
+<tr><td><span class="tag tag-orange">推荐</span></td><td>修容/阴影</td><td>与高光形成套装需求</td><td>+39%增速，内容驱动渗透</td></tr>
+<tr><td><span class="tag tag-yellow">持有</span></td><td>隔离/妆前</td><td>刚需跟随大盘</td><td>+25%增速，自身无独立增长驱动</td></tr>
+<tr><td><span class="tag tag-yellow">持有</span></td><td>蜜粉/散粉</td><td>定妆场景稳健</td><td>+24%，需关注喷雾分流</td></tr>
+<tr><td><span class="tag tag-yellow">持有</span></td><td>粉底液/膏</td><td>底妆基座守成</td><td>+26%，气垫替代是长期命题</td></tr>
+<tr><td><span class="tag tag-yellow">持有</span></td><td>粉饼</td><td>便携补妆刚需</td><td>+25%增速稳定</td></tr>
+<tr><td><span class="tag tag-green">避免</span></td><td>BB霜 / 定妆膏</td><td>不可逆衰退</td><td>-22% / -32%</td></tr>
+</tbody>
+</table>
+
+<div class="footnote">
+分析框架：梯队分层 → 2×2矩阵 → 跨品类主题 → 证据链溯源 → 机会排序。加权增速剔除有色面霜/防晒底妆/多用棒/CC霜/卸妆巾/定妆膏共6个低基数失真品类。数据来源：抖音平台面部彩妆细分类目。
+</div>
+
+</div>
+</body>
+</html>

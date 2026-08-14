@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>眼部彩妆细分类目气泡图</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #f5f5f5;
+    display: flex; justify-content: center; align-items: center;
+    min-height: 100vh; padding: 20px;
+  }
+  .card {
+    background: #fff; border-radius: 12px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+    padding: 28px 32px 20px; max-width: 960px; width: 100%;
+  }
+  .title { font-size: 18px; font-weight: 600; color: #1a1a1a; margin-bottom: 4px; }
+  .subtitle { font-size: 13px; color: #999; margin-bottom: 18px; }
+  .chart-wrap { position: relative; width: 100%; height: 520px; }
+  .footer { text-align: center; color: #aaa; font-size: 12px; margin-top: 12px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="title">眼部彩妆细分类目 — 销售额 × 增速气泡图</div>
+  <div class="subtitle">横轴：销售额（对数） · 纵轴：同比增速 · 气泡：客单价 · ⚫涨=红 / 跌=绿</div>
+  <div class="chart-wrap"><canvas id="bubbleChart"></canvas></div>
+  <p class="footer">眼影量价齐升，客单价断层最高（¥103）；眉笔/眉粉/眉膏体量第二且跌幅最浅；睫毛膏下滑最深（-14.5%）</p>
+</div>
+<script>
+(function() {
+  var ctx = document.getElementById('bubbleChart').getContext('2d');
+
+  // ── 数据：销售额(元)、增速(%)、客单价(元)，客单价=销售额/销量 ──
+  var items = [
+    { name: '眉笔/眉粉/眉膏', sales: 264494833, growth: -1.09, asp: 33.42 },
+    { name: '眼线',           sales: 151598461, growth: -1.75, asp: 31.84 },
+    { name: '睫毛膏',         sales: 179839197, growth:-14.46, asp: 51.46 },
+    { name: '眼影',           sales: 360380040, growth:  7.25, asp:103.28 },
+    { name: '卧蚕笔',         sales:  18115068, growth:  7.25, asp: 36.96 }
+  ];
+
+  // ── 增速 → 颜色（红涨绿跌）──
+  function growthColor(g) {
+    if (g > 5)  return 'rgba(201,42,42,0.58)';
+    if (g > 0)  return 'rgba(215,90,65,0.52)';
+    if (g > -3) return 'rgba(130,180,130,0.52)';
+    if (g > -8) return 'rgba(80,150,80,0.55)';
+    return 'rgba(40,110,40,0.58)';
+  }
+  function borderColor(g) {
+    if (g > 5)  return '#C92A2A';
+    if (g > 0)  return '#D75A41';
+    if (g > -3) return '#60A060';
+    if (g > -8) return '#509650';
+    return '#288D28';
+  }
+
+  // ── 客单价 → 气泡半径 ──
+  var asps = items.map(function(d) { return d.asp; });
+  var aspMin = Math.min.apply(null, asps);
+  var aspMax = Math.max.apply(null, asps);
+  function aspToRadius(asp) {
+    return 12 + (asp - aspMin) / (aspMax - aspMin) * 32;
+  }
+
+  var datasets = items.map(function(d, i) {
+    return {
+      label: d.name,
+      data: [{ x: d.sales, y: d.growth, r: aspToRadius(d.asp) }],
+      backgroundColor: growthColor(d.growth),
+      borderColor: borderColor(d.growth),
+      borderWidth: 1.5,
+      pointHoverRadius: aspToRadius(d.asp) + 3
+    };
+  });
+
+  // ── 引线偏移（5 个品类方向各异，不交叉不平行）──
+  var offsets = [
+    /* 0 眉笔/眉粉/眉膏 */ { dx:  55, dy: -35 },
+    /* 1 眼线 */           { dx: -52, dy:  28 },
+    /* 2 睫毛膏 */         { dx:   8, dy:  38 },
+    /* 3 眼影 */           { dx:  55, dy:  30 },
+    /* 4 卧蚕笔 */         { dx: -55, dy: -45 }
+  ];
+
+  var chart = new Chart(ctx, {
+    type: 'bubble',
+    data: { datasets: datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      layout: { padding: { top: 50, right: 130, bottom: 40, left: 120 } },
+      scales: {
+        x: {
+          type: 'logarithmic',
+          title: { display: true, text: '销售额（元）', font: { size: 13 }, color: '#666' },
+          min: 10000000,
+          max: 500000000,
+          ticks: {
+            callback: function(v) {
+              if (v >= 1e8) return (v / 1e8).toFixed(0) + '亿';
+              if (v >= 1e4) return (v / 1e4).toFixed(0) + '万';
+              return v;
+            },
+            font: { size: 11 },
+            color: '#666'
+          },
+          grid: { color: '#eee' }
+        },
+        y: {
+          title: { display: true, text: '销售额同比增速（%）', font: { size: 13 }, color: '#666' },
+          min: -20,
+          max: 15,
+          ticks: {
+            stepSize: 5,
+            callback: function(v) { return v + '%'; },
+            font: { size: 11 },
+            color: '#666'
+          },
+          grid: {
+            color: function(ctx) { return ctx.tick.value === 0 ? '#ccc' : '#eee'; },
+            lineWidth: function(ctx) { return ctx.tick.value === 0 ? 1.5 : 0.5; }
+          }
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              var d = items[ctx.datasetIndex];
+              return [
+                d.name,
+                '销售额: ' + (d.sales / 1e8).toFixed(2) + '亿',
+                '增速: ' + d.growth + '%',
+                '客单价: ¥' + d.asp.toFixed(0)
+              ];
+            }
+          }
+        }
+      }
+    },
+    plugins: [{
+      id: 'labels',
+      afterDraw: function(chart) {
+        var ctx2 = chart.ctx;
+        var metas = [];
+        for (var i = 0; i < items.length; i++) {
+          metas.push(chart.getDatasetMeta(i));
+        }
+
+        ctx2.save();
+        ctx2.font = 'bold 12px -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif';
+
+        for (var i = 0; i < items.length; i++) {
+          var d = items[i];
+          var pt = metas[i].data[0];
+          var cx = pt.x, cy = pt.y;
+          var r = aspToRadius(d.asp);
+          var off = offsets[i];
+
+          // 引线起点 = 气泡边缘
+          var angle = Math.atan2(off.dy, off.dx);
+          var sx = cx + Math.cos(angle) * r;
+          var sy = cy + Math.sin(angle) * r;
+
+          // 引线终点
+          var ex = sx + off.dx;
+          var ey = sy + off.dy;
+
+          // 虚线引线
+          ctx2.beginPath();
+          ctx2.setLineDash([3, 3]);
+          ctx2.strokeStyle = '#999';
+          ctx2.lineWidth = 0.8;
+          ctx2.moveTo(sx, sy);
+          ctx2.lineTo(ex, ey);
+          ctx2.stroke();
+          ctx2.setLineDash([]);
+
+          // 文字对齐
+          var align = 'left';
+          if (off.dx < -20) align = 'right';
+          else if (off.dx <= 20) align = 'center';
+
+          var baseline = 'middle';
+          if (off.dy < -20) baseline = 'bottom';
+          else if (off.dy > 20) baseline = 'top';
+
+          ctx2.textAlign = align;
+          ctx2.textBaseline = baseline;
+          ctx2.fillStyle = '#2C2C2A';
+
+          var tx = ex;
+          var ty = ey;
+
+          // 微调
+          if (off.dx > 0) tx += 4;
+          else if (off.dx < 0) tx -= 4;
+
+          // 长名称换行处理
+          var name = d.name;
+          ctx2.fillText(name, tx, ty);
+        }
+
+        ctx2.restore();
+      }
+    }]
+  });
+})();
+</script>
+</body>
+</html>

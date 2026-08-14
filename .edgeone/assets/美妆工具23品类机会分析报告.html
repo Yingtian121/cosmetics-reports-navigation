@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>美妆工具23品类机会深度分析</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #f0f2f5;
+    color: #1a1a2e;
+    line-height: 1.7;
+    padding: 40px 20px;
+  }
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    padding: 48px 40px;
+    border-radius: 20px;
+    margin-bottom: 32px;
+    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+  }
+  .hero h1 { font-size: 28px; font-weight: 800; margin-bottom: 12px; }
+  .hero .subtitle { font-size: 15px; opacity: 0.9; }
+  .hero .metrics { display: flex; gap: 32px; margin-top: 28px; flex-wrap: wrap; }
+  .hero .metric { }
+  .hero .metric .val { font-size: 32px; font-weight: 800; }
+  .hero .metric .label { font-size: 13px; opacity: 0.85; margin-top: 2px; }
+
+  /* Section */
+  .section {
+    background: #fff;
+    border-radius: 16px;
+    padding: 36px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .section h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 8px;
+    padding-left: 14px;
+    border-left: 4px solid #667eea;
+  }
+  .section .h2-sub { font-size: 13px; color: #888; margin-bottom: 24px; padding-left: 18px; }
+
+  /* Table */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th {
+    background: #f7f8fc;
+    color: #555;
+    font-weight: 600;
+    padding: 10px 8px;
+    text-align: right;
+    border-bottom: 2px solid #e0e0e0;
+    white-space: nowrap;
+  }
+  thead th:first-child, thead th:nth-child(2) { text-align: left; }
+  tbody td {
+    padding: 8px 8px;
+    text-align: right;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  tbody td:first-child { text-align: center; color: #aaa; width: 36px; }
+  tbody td:nth-child(2) { text-align: left; font-weight: 500; }
+  tbody tr:hover { background: #f9faff; }
+  tfoot td {
+    padding: 10px 8px;
+    font-weight: 700;
+    text-align: right;
+    border-top: 2px solid #e0e0e0;
+    background: #f7f8fc;
+  }
+  tfoot td:first-child { text-align: center; }
+  tfoot td:nth-child(2) { text-align: left; }
+
+  .pos { color: #e74c3c; font-weight: 600; }
+  .neg { color: #27ae60; font-weight: 600; }
+  .star { color: #e74c3c; }
+  .muted { color: #aaa; font-size: 11px; }
+
+  /* Tier cards */
+  .tier-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .tier-card {
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #eee;
+  }
+  .tier-card.t1 { border-color: #e74c3c; background: #fef5f5; }
+  .tier-card.t2 { border-color: #f39c12; background: #fef9f2; }
+  .tier-card.t3 { border-color: #3498db; background: #f0f7fd; }
+  .tier-card.t4 { border-color: #95a5a6; background: #f7f8f9; }
+  .tier-card h3 { font-size: 15px; margin-bottom: 4px; }
+  .tier-card .tier-val { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+  .tier-card.t1 .tier-val { color: #e74c3c; }
+  .tier-card.t2 .tier-val { color: #f39c12; }
+  .tier-card.t3 .tier-val { color: #3498db; }
+  .tier-card.t4 .tier-val { color: #95a5a6; }
+  .tier-card .tier-items { font-size: 12px; color: #666; line-height: 1.8; }
+
+  /* Eco chain */
+  .eco-block {
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+    border-left: 5px solid;
+  }
+  .eco-block h3 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .eco-block .eco-meta { font-size: 13px; color: #888; margin-bottom: 12px; }
+  .eco-block .eco-insight {
+    font-size: 13px;
+    color: #444;
+    background: rgba(255,255,255,0.6);
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-top: 12px;
+    line-height: 1.8;
+  }
+  .eco-block .eco-insight strong { color: #e74c3c; }
+
+  .eco-1 { border-color: #e74c3c; background: #fef9f8; }
+  .eco-2 { border-color: #9b59b6; background: #faf7fd; }
+  .eco-3 { border-color: #3498db; background: #f4f9fe; }
+  .eco-4 { border-color: #27ae60; background: #f4fbf7; }
+  .eco-5 { border-color: #f39c12; background: #fefbf5; }
+
+  /* Incremental table */
+  .incr-table .bar-cell { position: relative; min-width: 120px; }
+  .incr-bar {
+    display: inline-block;
+    height: 18px;
+    border-radius: 3px;
+    vertical-align: middle;
+  }
+
+  /* Insight box */
+  .insight-box {
+    background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf3 100%);
+    border-radius: 12px;
+    padding: 24px;
+    margin: 16px 0;
+    border-left: 4px solid #667eea;
+  }
+  .insight-box h4 { font-size: 15px; font-weight: 700; margin-bottom: 8px; color: #333; }
+  .insight-box p { font-size: 13px; color: #555; line-height: 1.9; }
+  .insight-box .formula {
+    text-align: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: #667eea;
+    padding: 16px;
+    background: #fff;
+    border-radius: 8px;
+    margin: 12px 0;
+    letter-spacing: 0.5px;
+  }
+
+  /* Cross-category */
+  .xcat-table th { background: #667eea; color: #fff; }
+  .xcat-table td { font-size: 13px; }
+
+  /* Life cycle */
+  .lifecycle {
+    display: flex;
+    gap: 0;
+    margin: 20px 0;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .lc-stage {
+    flex: 1;
+    padding: 20px 16px;
+    text-align: center;
+  }
+  .lc-stage .lc-name { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+  .lc-stage .lc-items { font-size: 11px; line-height: 1.8; }
+  .lc-1 { background: #e8f5e9; }
+  .lc-2 { background: #fff3e0; }
+  .lc-3 { background: #fce4ec; }
+  .lc-4 { background: #f3e5f5; }
+
+  /* Ranking */
+  .rank-item {
+    display: flex;
+    gap: 16px;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    align-items: flex-start;
+  }
+  .rank-item.rec { background: linear-gradient(135deg, #fff5f5, #ffeaea); border-left: 4px solid #e74c3c; }
+  .rank-item.watch { background: linear-gradient(135deg, #fffbeb, #fef3c7); border-left: 4px solid #f59e0b; }
+  .rank-item.hold { background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border-left: 4px solid #3b82f6; }
+  .rank-item.avoid { background: linear-gradient(135deg, #f0fdf4, #dcfce7); border-left: 4px solid #22c55e; }
+
+  .rank-badge {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 18px;
+    color: #fff;
+  }
+  .rank-badge.rec { background: #e74c3c; }
+  .rank-badge.watch { background: #f59e0b; }
+  .rank-badge.hold { background: #3b82f6; }
+  .rank-badge.avoid { background: #22c55e; }
+
+  .rank-content { flex: 1; }
+  .rank-content h4 { font-size: 16px; margin-bottom: 4px; }
+  .rank-content .rank-meta { font-size: 13px; color: #666; margin-bottom: 6px; }
+  .rank-content .rank-reason { font-size: 13px; color: #444; line-height: 1.8; }
+
+  /* ASP ladder */
+  .asp-ladder {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    height: 200px;
+    margin: 24px 0;
+    padding: 0 20px;
+  }
+  .asp-bar {
+    flex: 1;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 8px 4px;
+    position: relative;
+  }
+  .asp-bar .asp-val { font-size: 18px; font-weight: 800; color: #fff; }
+  .asp-bar .asp-label { font-size: 11px; color: #fff; margin-top: 2px; writing-mode: horizontal-tb; }
+
+  .note { font-size: 12px; color: #999; margin-top: 8px; }
+  .highlight { background: #fff3cd; padding: 2px 6px; border-radius: 4px; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ===== HERO ===== -->
+<div class="hero">
+  <h1>美妆工具 · 23品类机会深度分析</h1>
+  <div class="subtitle">抖音平台 · 全新数据 · 独立分析 · 含跨品类交叉对比</div>
+  <div class="metrics">
+    <div class="metric"><div class="val">26.06亿</div><div class="label">23品类合计销售额</div></div>
+    <div class="metric"><div class="val">+37.1%</div><div class="label">加权增速（剔除4个极端低基数）</div></div>
+    <div class="metric"><div class="val">¥19.1</div><div class="label">整体ASP（客单价）</div></div>
+    <div class="metric"><div class="val">23</div><div class="label">细分类目数</div></div>
+  </div>
+</div>
+
+<!-- ===== 1. 数据总览 ===== -->
+<div class="section">
+  <h2>一、数据总览</h2>
+  <div class="h2-sub">23个细分类目，按销售额降序排列 | 销量精确到万（四舍五入）| 销售额精确到亿（两位小数）</div>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>类别名称</th>
+        <th>销量(万)</th>
+        <th>销售额(亿)</th>
+        <th>销售额同比</th>
+        <th>ASP(¥)</th>
+        <th>体量占比</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>假睫毛</td><td>5,327</td><td>9.74</td><td class="pos">+25.4%</td><td>18.29</td><td>37.4%</td></tr>
+      <tr><td>2</td><td>面扑/粉扑</td><td>1,844</td><td>3.79</td><td class="pos">+39.2%</td><td>20.53</td><td>14.5%</td></tr>
+      <tr><td>3</td><td>化妆/美容工具</td><td>1,206</td><td>2.60</td><td class="neg">-0.7%</td><td>21.56</td><td>10.0%</td></tr>
+      <tr><td>4</td><td>洗脸刷/化妆刷</td><td>1,052</td><td>2.19</td><td class="pos">+33.6%</td><td>20.78</td><td>8.4%</td></tr>
+      <tr><td>5</td><td>双眼皮贴</td><td>1,330</td><td>1.71</td><td class="pos">+40.3%</td><td>12.83</td><td>6.5%</td></tr>
+      <tr><td>6</td><td>化妆套刷</td><td>413</td><td>1.30</td><td class="pos">+28.6%</td><td>31.49</td><td>5.0%</td></tr>
+      <tr><td>7</td><td>睫毛卷翘工具/睫毛夹</td><td>291</td><td>0.70</td><td class="pos">+103.0%</td><td>24.02</td><td>2.7%</td></tr>
+      <tr><td>8</td><td>假睫毛胶水</td><td>318</td><td>0.63</td><td class="pos">+13.0%</td><td>19.96</td><td>2.4%</td></tr>
+      <tr><td>9</td><td>DIY面膜工具</td><td>96</td><td>0.49</td><td class="pos">+198.4%<span class="muted">*</span></td><td>51.01</td><td>1.9%</td></tr>
+      <tr><td>10</td><td>镊子/粉刺针/细胞夹</td><td>340</td><td>0.48</td><td class="pos">+15.8%</td><td>14.21</td><td>1.9%</td></tr>
+      <tr><td>11</td><td>卸妆棉/化妆棉</td><td>236</td><td>0.41</td><td class="neg">-17.9%</td><td>17.42</td><td>1.6%</td></tr>
+      <tr><td>12</td><td>美妆蛋/化妆海绵</td><td>210</td><td>0.40</td><td class="pos">+353.2%<span class="muted">*</span></td><td>18.93</td><td>1.5%</td></tr>
+      <tr><td>13</td><td>假睫毛辅助工具</td><td>184</td><td>0.33</td><td class="neg">-51.5%</td><td>18.15</td><td>1.3%</td></tr>
+      <tr><td>14</td><td>修眉刀</td><td>458</td><td>0.32</td><td class="pos">+8.1%</td><td>7.02</td><td>1.2%</td></tr>
+      <tr><td>15</td><td>化妆印章</td><td>38</td><td>0.26</td><td class="pos">+3,257%<span class="muted">**</span></td><td>67.61</td><td>1.0%</td></tr>
+      <tr><td>16</td><td>化妆包/刷包</td><td>32</td><td>0.20</td><td class="pos">+158.3%<span class="muted">*</span></td><td>61.03</td><td>0.8%</td></tr>
+      <tr><td>17</td><td>吸油纸</td><td>85</td><td>0.19</td><td class="pos">+26.4%</td><td>22.96</td><td>0.7%</td></tr>
+      <tr><td>18</td><td>面部贴纸/彩绘/花钿</td><td>104</td><td>0.14</td><td class="pos">+458,512%<span class="muted">**</span></td><td>13.20</td><td>0.5%</td></tr>
+      <tr><td>19</td><td>粉扑/化妆刷清洁剂</td><td>69</td><td>0.12</td><td class="pos">+303.4%<span class="muted">*</span></td><td>16.78</td><td>0.4%</td></tr>
+      <tr><td>20</td><td>双眼皮胶水</td><td>18</td><td>0.04</td><td class="pos">+38.6%</td><td>19.75</td><td>0.1%</td></tr>
+      <tr><td>21</td><td>耳贴/耳挂</td><td>17</td><td>0.02</td><td class="pos">+1,073%<span class="muted">**</span></td><td>14.33</td><td>0.1%</td></tr>
+      <tr><td>22</td><td>面膜碗</td><td>2</td><td>0.005</td><td class="pos">+269.4%<span class="muted">*</span></td><td>22.67</td><td>0.0%</td></tr>
+      <tr><td>23</td><td>睫毛印章</td><td>0.3</td><td>0.001</td><td class="muted">新增</td><td>43.07</td><td>0.0%</td></tr>
+    </tbody>
+    <tfoot>
+      <tr><td></td><td>合计</td><td>13,670</td><td>26.06</td><td class="pos">+37.1%†</td><td>19.06</td><td>100%</td></tr>
+    </tfoot>
+  </table>
+  <div class="note">
+    <span class="muted">*低基数效应（去年基期&lt;1000万）</span> &nbsp;&nbsp;
+    <span class="muted">**极端低基数（去年基期&lt;100万）</span> &nbsp;&nbsp;
+    <span class="muted">†加权增速剔除4个极端低基数品类（面部贴纸/化妆印章/耳贴/睫毛印章）</span>
+  </div>
+</div>
+
+<!-- ===== 2. 梯队分层 ===== -->
+<div class="section">
+  <h2>二、梯队分层</h2>
+  <div class="h2-sub">按销售额体量划分为四个梯队，体量集中度极高</div>
+  <div class="tier-grid">
+    <div class="tier-card t1">
+      <h3>T1 · 超级龙头（≥5亿）</h3>
+      <div class="tier-val">9.74亿 / 37.4%</div>
+      <div class="tier-items">
+        假睫毛（9.74亿/+25.4%）— 一个品类贡献了大盘37%的体量，集中度在四大类中绝无仅有
+      </div>
+    </div>
+    <div class="tier-card t2">
+      <h3>T2 · 核心品类（1-5亿）</h3>
+      <div class="tier-val">11.59亿 / 44.5%</div>
+      <div class="tier-items">
+        面扑/粉扑（3.79亿/+39.2%）<br>
+        化妆/美容工具（2.60亿/-0.7%）<br>
+        洗脸刷/化妆刷（2.19亿/+33.6%）<br>
+        双眼皮贴（1.71亿/+40.3%）<br>
+        化妆套刷（1.30亿/+28.6%）
+      </div>
+    </div>
+    <div class="tier-card t3">
+      <h3>T3 · 腰部品类（0.3-1亿）</h3>
+      <div class="tier-val">3.76亿 / 14.4%</div>
+      <div class="tier-items">
+        睫毛夹（0.70亿/+103.0%）<br>
+        假睫毛胶水（0.63亿/+13.0%）<br>
+        DIY面膜工具（0.49亿/+198.4%*）<br>
+        镊子/粉刺针/细胞夹（0.48亿/+15.8%）<br>
+        卸妆棉/化妆棉（0.41亿/-17.9%）<br>
+        美妆蛋/化妆海绵（0.40亿/+353.2%*）<br>
+        假睫毛辅助工具（0.33亿/-51.5%）<br>
+        修眉刀（0.32亿/+8.1%）
+      </div>
+    </div>
+    <div class="tier-card t4">
+      <h3>T4 · 长尾品类（&lt;0.3亿）</h3>
+      <div class="tier-val">0.97亿 / 3.7%</div>
+      <div class="tier-items">
+        化妆印章、化妆包/刷包、吸油纸、面部贴纸/彩绘/花钿、粉扑清洁剂、双眼皮胶水、耳贴/耳挂、面膜碗、睫毛印章
+      </div>
+    </div>
+  </div>
+  <div class="insight-box">
+    <h4>集中度洞察</h4>
+    <p>T1+T2合计21.33亿，占大盘<span class="highlight">81.9%</span>。仅假睫毛一个品类就占37.4%——这种"一超多强"格局在面部彩妆（最大品类气垫占19.8%）、唇部彩妆（唇彩占55.1%但只有4个品类）、眼部彩妆（眼影占29.8%）中都没有如此极端。假睫毛的体量地位决定了整个美妆工具大盘的走向。</p>
+  </div>
+</div>
+
+<!-- ===== 3. 五大生态链拆解 ===== -->
+<div class="section">
+  <h2>三、五大生态链拆解</h2>
+  <div class="h2-sub">美妆工具不是散点分布，而是围绕"使用场景"形成的生态链。将23个品类重组为5条生态链，揭示品类间的连带与替代关系</div>
+
+  <div class="eco-block eco-1">
+    <h3>生态链一：睫毛生态链</h3>
+    <div class="eco-meta">假睫毛 + 睫毛夹 + 假睫毛胶水 + 假睫毛辅助工具 + 睫毛印章 ｜ 合计 11.41亿，占比 43.8%</div>
+    <table>
+      <thead><tr><th>品类</th><th>销售额(亿)</th><th>增速</th><th>ASP(¥)</th><th>角色</th></tr></thead>
+      <tbody>
+        <tr><td>假睫毛</td><td>9.74</td><td class="pos">+25.4%</td><td>18.29</td><td>超级母品类</td></tr>
+        <tr><td>睫毛卷翘工具/睫毛夹</td><td>0.70</td><td class="pos">+103.0%</td><td>24.02</td><td>工具反超</td></tr>
+        <tr><td>假睫毛胶水</td><td>0.63</td><td class="pos">+13.0%</td><td>19.96</td><td>配套耗材</td></tr>
+        <tr><td>假睫毛辅助工具</td><td>0.33</td><td class="neg">-51.5%</td><td>18.15</td><td>被内化</td></tr>
+        <tr><td>睫毛印章</td><td>0.001</td><td class="muted">新增</td><td>43.07</td><td>概念延伸</td></tr>
+      </tbody>
+    </table>
+    <div class="eco-insight">
+      <strong>核心洞察：</strong>假睫毛以一己之力撑起了近半数工具大盘。但最值得关注的是生态链内部的<strong>分化裂痕</strong>——主品类+25%、配套工具+103%、耗材+13%，而辅助工具-51.5%断崖式衰退。这说明假睫毛正在经历"产品升级"：自粘型假睫毛的普及使得镊子、修剪工具等辅助品类不再必要，<strong>上游产品正在内化下游工具的功能</strong>。这与面部彩妆中BB霜被气垫"外部替代"不同——这是"内部功能整合"，衰退更隐蔽但同样不可逆。
+    </div>
+  </div>
+
+  <div class="eco-block eco-2">
+    <h3>生态链二：上妆工具链</h3>
+    <div class="eco-meta">面扑/粉扑 + 美妆蛋/化妆海绵 + 粉扑/化妆刷清洁剂 ｜ 合计 4.31亿，占比 16.5%</div>
+    <table>
+      <thead><tr><th>品类</th><th>销售额(亿)</th><th>增速</th><th>ASP(¥)</th><th>角色</th></tr></thead>
+      <tbody>
+        <tr><td>面扑/粉扑</td><td>3.79</td><td class="pos">+39.2%</td><td>20.53</td><td>主力（寄生型）</td></tr>
+        <tr><td>美妆蛋/化妆海绵</td><td>0.40</td><td class="pos">+353.2%*</td><td>18.93</td><td>爆发（低基数）</td></tr>
+        <tr><td>粉扑/化妆刷清洁剂</td><td>0.12</td><td class="pos">+303.4%*</td><td>16.78</td><td>习惯升级</td></tr>
+      </tbody>
+    </table>
+    <div class="eco-insight">
+      <strong>核心洞察：</strong>粉扑+39.2%的增速与气垫+42%几乎同步——这是典型的<strong>"寄生型增长"</strong>，工具跟随所服务的彩妆品类同频共振。美妆蛋+353%和清洁剂+303%虽为低基数效应，但方向正确：前者意味着"上妆工具"从可选变必选，后者意味着<strong>"美妆卫生意识"觉醒</strong>——从"用到坏再换"到"定期清洁/更换"。这与食品行业"保质期意识"的觉醒路径一致，是一个消费升级信号。
+    </div>
+  </div>
+
+  <div class="eco-block eco-3">
+    <h3>生态链三：刷具链</h3>
+    <div class="eco-meta">洗脸刷/化妆刷 + 化妆套刷 + 化妆/美容工具 + 化妆包/刷包 ｜ 合计 6.29亿，占比 24.1%</div>
+    <table>
+      <thead><tr><th>品类</th><th>销售额(亿)</th><th>增速</th><th>ASP(¥)</th><th>角色</th></tr></thead>
+      <tbody>
+        <tr><td>化妆/美容工具</td><td>2.60</td><td class="neg">-0.7%</td><td>21.56</td><td>通用品类（被替代）</td></tr>
+        <tr><td>洗脸刷/化妆刷</td><td>2.19</td><td class="pos">+33.6%</td><td>20.78</td><td>稳健主力</td></tr>
+        <tr><td>化妆套刷</td><td>1.30</td><td class="pos">+28.6%</td><td>31.49</td><td>套装化升级</td></tr>
+        <tr><td>化妆包/刷包</td><td>0.20</td><td class="pos">+158.3%*</td><td>61.03</td><td>配件高溢价</td></tr>
+      </tbody>
+    </table>
+    <div class="eco-insight">
+      <strong>核心洞察：</strong>刷具链揭示了一个反直觉现象——<strong>配件比工具本身更赚钱</strong>。化妆包/刷包ASP ¥61.03是单支化妆刷（¥20.78）的3倍。同时，"化妆/美容工具"（-0.7%）作为通用品类正在停滞，被专业细分的"化妆刷"（+33.6%）和"化妆套刷"（+28.6%）替代。套刷增长背后的逻辑是：<strong>消费者从"一支刷走天下"变成"不同颜色用不同刷"</strong>，耐用品正在向半耗材转化。
+    </div>
+  </div>
+
+  <div class="eco-block eco-4">
+    <h3>生态链四：眼型改造链</h3>
+    <div class="eco-meta">双眼皮贴 + 双眼皮胶水 ｜ 合计 1.75亿，占比 6.7%</div>
+    <table>
+      <thead><tr><th>品类</th><th>销售额(亿)</th><th>增速</th><th>ASP(¥)</th><th>角色</th></tr></thead>
+      <tbody>
+        <tr><td>双眼皮贴</td><td>1.71</td><td class="pos">+40.3%</td><td>12.83</td><td>独立型增长</td></tr>
+        <tr><td>双眼皮胶水</td><td>0.04</td><td class="pos">+38.6%</td><td>19.75</td><td>补充形态</td></tr>
+      </tbody>
+    </table>
+    <div class="eco-insight">
+      <strong>核心洞察：</strong>双眼皮贴+40.3%是一个<strong>独立于彩妆大盘</strong>的增长——它不服务于任何彩妆品类，而是满足"改变眼部形态"的刚性需求。ASP仅¥12.83是全品类最低之一，低价高频耗材属性极强。增速与粉扑（+39.2%）接近，但驱动逻辑完全不同：粉扑是气垫带动的寄生型增长，双眼皮贴是<strong>原生需求驱动的独立型增长</strong>，抗周期能力更强。
+    </div>
+  </div>
+
+  <div class="eco-block eco-5">
+    <h3>生态链五：清洁维护链</h3>
+    <div class="eco-meta">卸妆棉/化妆棉 + 吸油纸 + 镊子/粉刺针/细胞夹 ｜ 合计 1.08亿，占比 4.1%</div>
+    <table>
+      <thead><tr><th>品类</th><th>销售额(亿)</th><th>增速</th><th>ASP(¥)</th><th>角色</th></tr></thead>
+      <tbody>
+        <tr><td>镊子/粉刺针/细胞夹</td><td>0.48</td><td class="pos">+15.8%</td><td>14.21</td><td>面部护理工具</td></tr>
+        <tr><td>卸妆棉/化妆棉</td><td>0.41</td><td class="neg">-17.9%</td><td>17.42</td><td>被卸妆水/油替代</td></tr>
+        <tr><td>吸油纸</td><td>0.19</td><td class="pos">+26.4%</td><td>22.96</td><td>控油耗材</td></tr>
+      </tbody>
+    </table>
+    <div class="eco-insight">
+      <strong>核心洞察：</strong>卸妆棉-17.9%是本组最大的衰退信号——它正在被面部彩妆中的<strong>卸妆油/卸妆水/卸妆啫喱（14.90亿/+24%）</strong>直接替代。"棉片+卸妆水分离"的模式正在被"一体化卸妆产品"取代。而细胞夹+15.8%的增长来自短视频"挤痘痘/去黑头"类内容的持续推动，是内容驱动型的护理工具。
+    </div>
+  </div>
+</div>
+
+<!-- ===== 4. 增量贡献拆解 ===== -->
+<div class="section">
+  <h2>四、增量贡献拆解</h2>
+  <div class="h2-sub">增量 = 今年销售额 × 增速 ÷ (1+增速) ｜ 剔除4个极端低基数品类后的增量分布</div>
+  <table class="incr-table">
+    <thead>
+      <tr><th>#</th><th>品类</th><th>体量(亿)</th><th>体量占比</th><th>增量(亿)</th><th>增量贡献</th><th>增量效率</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>假睫毛</td><td>9.74</td><td>37.4%</td><td class="pos">+1.98</td><td class="pos">37.1%</td><td>0.99x</td></tr>
+      <tr><td>2</td><td>面扑/粉扑</td><td>3.79</td><td>14.5%</td><td class="pos">+1.07</td><td class="pos">20.0%</td><td>1.38x</td></tr>
+      <tr><td>3</td><td>洗脸刷/化妆刷</td><td>2.19</td><td>8.4%</td><td class="pos">+0.55</td><td class="pos">10.3%</td><td>1.23x</td></tr>
+      <tr><td>4</td><td>双眼皮贴</td><td>1.71</td><td>6.5%</td><td class="pos">+0.49</td><td class="pos">9.2%</td><td>1.42x</td></tr>
+      <tr><td>5</td><td>睫毛卷翘工具/睫毛夹</td><td>0.70</td><td>2.7%</td><td class="pos">+0.35</td><td class="pos">6.6%</td><td><strong>2.44x</strong></td></tr>
+      <tr><td>6</td><td>DIY面膜工具</td><td>0.49</td><td>1.9%</td><td class="pos">+0.33</td><td class="pos">6.2%</td><td><strong>3.26x</strong></td></tr>
+      <tr><td>7</td><td>美妆蛋/化妆海绵</td><td>0.40</td><td>1.5%</td><td class="pos">+0.31</td><td class="pos">5.8%</td><td><strong>3.87x</strong></td></tr>
+      <tr><td>8</td><td>化妆套刷</td><td>1.30</td><td>5.0%</td><td class="pos">+0.29</td><td class="pos">5.4%</td><td>1.08x</td></tr>
+      <tr><td>9</td><td>粉扑/化妆刷清洁剂</td><td>0.12</td><td>0.4%</td><td class="pos">+0.09</td><td class="pos">1.7%</td><td><strong>4.25x</strong></td></tr>
+      <tr><td>10</td><td>化妆包/刷包</td><td>0.20</td><td>0.8%</td><td class="pos">+0.12</td><td class="pos">2.3%</td><td>2.88x</td></tr>
+      <tr><td>11</td><td>假睫毛胶水</td><td>0.63</td><td>2.4%</td><td class="pos">+0.07</td><td class="pos">1.4%</td><td>0.58x</td></tr>
+      <tr><td>12</td><td>镊子/粉刺针/细胞夹</td><td>0.48</td><td>1.9%</td><td class="pos">+0.07</td><td class="pos">1.2%</td><td>0.63x</td></tr>
+      <tr><td>13</td><td>吸油纸</td><td>0.19</td><td>0.7%</td><td class="pos">+0.04</td><td class="pos">0.8%</td><td>1.14x</td></tr>
+      <tr><td>14</td><td>修眉刀</td><td>0.32</td><td>1.2%</td><td class="pos">+0.02</td><td class="pos">0.4%</td><td><strong>0.33x</strong></td></tr>
+      <tr><td>15</td><td>双眼皮胶水</td><td>0.04</td><td>0.1%</td><td class="pos">+0.01</td><td class="pos">0.2%</td><td>2.00x</td></tr>
+      <tr><td>16</td><td>化妆/美容工具</td><td>2.60</td><td>10.0%</td><td class="neg">-0.02</td><td class="neg">-0.3%</td><td><strong>-0.03x</strong></td></tr>
+      <tr><td>17</td><td>卸妆棉/化妆棉</td><td>0.41</td><td>1.6%</td><td class="neg">-0.09</td><td class="neg">-1.7%</td><td>-1.06x</td></tr>
+      <tr><td>18</td><td>假睫毛辅助工具</td><td>0.33</td><td>1.3%</td><td class="neg">-0.35</td><td class="neg">-6.6%</td><td><strong>-5.08x</strong></td></tr>
+      <tr><td>19</td><td>面膜碗</td><td>0.005</td><td>0.0%</td><td class="pos">+0.003</td><td class="pos">0.1%</td><td>—</td></tr>
+    </tbody>
+    <tfoot>
+      <tr><td></td><td>合计</td><td>25.64</td><td>100%</td><td class="pos">+5.33</td><td>100%</td><td>—</td></tr>
+    </tfoot>
+  </table>
+  <div class="insight-box">
+    <h4>增量效率 = 增量贡献 ÷ 体量占比</h4>
+    <p>
+      <strong>效率之王</strong>：粉扑清洁剂（4.25x）、美妆蛋（3.87x）、DIY面膜工具（3.26x）——体量极小但增量效率极高，是"小品类大动能"的典型。<br>
+      <strong>效率拖累</strong>：假睫毛辅助工具（-5.08x）——以1.3%的体量"吃掉"了6.6%的增量空间，是全盘最大的"失血点"。修眉刀（0.33x）虽然正增长但效率极低，7.02元的ASP意味着低价走量但利润空间极薄。<br>
+      <strong>假睫毛的"体量陷阱"</strong>：虽然增量绝对值最大（1.98亿），但效率仅0.99x——增量贡献与体量占比几乎持平，说明龙头品类的增长已经进入"惯性增长"阶段，不再有超额效率。
+    </p>
+  </div>
+</div>
+
+<!-- ===== 5. ASP阶梯与耗材vs耐用 ===== -->
+<div class="section">
+  <h2>五、ASP阶梯与"耗材 vs 耐用"二分法</h2>
+  <div class="h2-sub">美妆工具独有的结构性特征：按使用频率分为"耗材型"和"耐用型"，增速表现截然不同</div>
+
+  <h3 style="font-size:16px; margin: 20px 0 12px; color:#333;">5.1 ASP阶梯分布</h3>
+  <table>
+    <thead><tr><th>ASP区间</th><th>品类</th><th>ASP(¥)</th><th>增速</th><th>特征</th></tr></thead>
+    <tbody>
+      <tr><td rowspan="3">高溢价（&gt;¥50）</td><td>化妆印章</td><td>67.61</td><td class="pos">+3,257%**</td><td>新奇概念溢价</td></tr>
+      <tr><td>化妆包/刷包</td><td>61.03</td><td class="pos">+158.3%*</td><td>配件>工具的溢价</td></tr>
+      <tr><td>DIY面膜工具</td><td>51.01</td><td class="pos">+198.4%*</td><td>功能复合溢价</td></tr>
+      <tr><td rowspan="3">中价位（¥24-35）</td><td>化妆套刷</td><td>31.49</td><td class="pos">+28.6%</td><td>套装化</td></tr>
+      <tr><td>睫毛印章</td><td>43.07</td><td class="muted">新增</td><td>—</td></tr>
+      <tr><td>睫毛夹</td><td>24.02</td><td class="pos">+103.0%</td><td>功能工具</td></tr>
+      <tr><td rowspan="6">主流带（¥17-23）</td><td>吸油纸</td><td>22.96</td><td class="pos">+26.4%</td><td>控油耗材</td></tr>
+      <tr><td>面膜碗</td><td>22.67</td><td class="pos">+269.4%*</td><td>—</td></tr>
+      <tr><td>化妆/美容工具</td><td>21.56</td><td class="neg">-0.7%</td><td>通用品类</td></tr>
+      <tr><td>洗脸刷/化妆刷</td><td>20.78</td><td class="pos">+33.6%</td><td>主力工具</td></tr>
+      <tr><td>假睫毛胶水</td><td>19.96</td><td class="pos">+13.0%</td><td>配套耗材</td></tr>
+      <tr><td>双眼皮胶水</td><td>19.75</td><td class="pos">+38.6%</td><td>眼型改造</td></tr>
+      <tr><td rowspan="4">低价带（¥14-19）</td><td>面扑/粉扑</td><td>20.53</td><td class="pos">+39.2%</td><td>上妆耗材</td></tr>
+      <tr><td>假睫毛</td><td>18.29</td><td class="pos">+25.4%</td><td>超级耗材</td></tr>
+      <tr><td>美妆蛋/化妆海绵</td><td>18.93</td><td class="pos">+353.2%*</td><td>上妆耗材</td></tr>
+      <tr><td>卸妆棉/化妆棉</td><td>17.42</td><td class="neg">-17.9%</td><td>被替代</td></tr>
+      <tr><td rowspan="4">超低价（&lt;¥14）</td><td>粉扑清洁剂</td><td>16.78</td><td class="pos">+303.4%*</td><td>清洁耗材</td></tr>
+      <tr><td>假睫毛辅助工具</td><td>18.15</td><td class="neg">-51.5%</td><td>被内化</td></tr>
+      <tr><td>面部贴纸/彩绘/花钿</td><td>13.20</td><td class="pos">+458,512%**</td><td>—</td></tr>
+      <tr><td>双眼皮贴</td><td>12.83</td><td class="pos">+40.3%</td><td>超低价耗材</td></tr>
+      <tr><td></td><td>耳贴/耳挂</td><td>14.33</td><td class="pos">+1,073%**</td><td>—</td></tr>
+      <tr><td></td><td>镊子/粉刺针/细胞夹</td><td>14.21</td><td class="pos">+15.8%</td><td>护理耐用</td></tr>
+      <tr><td></td><td>修眉刀</td><td>7.02</td><td class="pos">+8.1%</td><td>最低ASP</td></tr>
+    </tbody>
+  </table>
+
+  <h3 style="font-size:16px; margin: 28px 0 12px; color:#333;">5.2 "耗材 vs 耐用"二分法</h3>
+  <table>
+    <thead><tr><th>类型</th><th>品类</th><th>体量(亿)</th><th>加权增速</th><th>ASP均值</th><th>核心特征</th></tr></thead>
+    <tbody>
+      <tr>
+        <td rowspan="7"><strong>耗材型</strong><br>高频复购</td>
+        <td>假睫毛</td><td>9.74</td><td class="pos">+25.4%</td><td>18.29</td><td>一次性使用，需反复购买</td>
+      </tr>
+      <tr><td>面扑/粉扑</td><td>3.79</td><td class="pos">+39.2%</td><td>20.53</td><td>1-3月更换周期</td></tr>
+      <tr><td>美妆蛋/化妆海绵</td><td>0.40</td><td class="pos">+353.2%*</td><td>18.93</td><td>1-3月更换周期</td></tr>
+      <tr><td>双眼皮贴</td><td>1.71</td><td class="pos">+40.3%</td><td>12.83</td><td>日抛型，极高频</td></tr>
+      <tr><td>卸妆棉/化妆棉</td><td>0.41</td><td class="neg">-17.9%</td><td>17.42</td><td>日耗型（但被替代）</td></tr>
+      <tr><td>吸油纸</td><td>0.19</td><td class="pos">+26.4%</td><td>22.96</td><td>日耗型</td></tr>
+      <tr><td>假睫毛胶水</td><td>0.63</td><td class="pos">+13.0%</td><td>19.96</td><td>消耗型配套</td></tr>
+      <tr>
+        <td rowspan="6"><strong>耐用型</strong><br>低频复购</td>
+        <td>化妆/美容工具</td><td>2.60</td><td class="neg">-0.7%</td><td>21.56</td><td>可用数年</td>
+      </tr>
+      <tr><td>洗脸刷/化妆刷</td><td>2.19</td><td class="pos">+33.6%</td><td>20.78</td><td>可用1-3年</td></tr>
+      <tr><td>化妆套刷</td><td>1.30</td><td class="pos">+28.6%</td><td>31.49</td><td>可用1-3年</td></tr>
+      <tr><td>睫毛夹</td><td>0.70</td><td class="pos">+103.0%</td><td>24.02</td><td>可用数年</td></tr>
+      <tr><td>镊子/粉刺针/细胞夹</td><td>0.48</td><td class="pos">+15.8%</td><td>14.21</td><td>可用数年</td></tr>
+      <tr><td>修眉刀</td><td>0.32</td><td class="pos">+8.1%</td><td>7.02</td><td>刀片可换</td></tr>
+    </tbody>
+  </table>
+  <div class="insight-box">
+    <h4>"耗材 vs 耐用"的核心差异</h4>
+    <p>
+      <strong>耗材型</strong>7个品类合计16.87亿，加权增速+28.5%。增长主要来自<strong>复购驱动</strong>，消费者一旦形成使用习惯就会持续购买，增长具有"滚雪球"效应。<br>
+      <strong>耐用型</strong>6个品类合计7.59亿，加权增速+24.3%。增长主要来自<strong>渗透率提升</strong>（新用户首次购买），存量用户复购贡献低，增长有"天花板"。<br><br>
+      但有一个<strong>例外</strong>打破了规律：睫毛夹（耐用型）+103%远超大部分耗材——因为假睫毛用户的增长创造了新的工具需求（先夹再贴），这个增量来自"使用场景扩展"而非"复购"。这说明<strong>工具增长不只看耗材属性，还要看所服务场景的扩张速度</strong>。
+    </p>
+  </div>
+</div>
+
+<!-- ===== 6. 跨品类交叉对比 ===== -->
+<div class="section">
+  <h2>六、跨品类交叉对比（四大类）</h2>
+  <div class="h2-sub">将美妆工具与面部彩妆（20品类）、唇部彩妆（4品类）、眼部彩妆（7品类）放在一起，从4个维度做结构性对比</div>
+
+  <h3 style="font-size:16px; margin: 20px 0 12px; color:#333;">6.1 四大类总览</h3>
+  <table class="xcat-table">
+    <thead>
+      <tr><th>大类</th><th>品类数</th><th>总销售额(亿)</th><th>加权增速</th><th>ASP(¥)</th><th>最大品类</th><th>集中度</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>面部彩妆</td><td>20</td><td>174.76</td><td class="pos">+33.0%</td><td>69.9</td><td>气垫(34.57亿/19.8%)</td><td>分散</td></tr>
+      <tr><td>唇部彩妆</td><td>4</td><td>42.71</td><td class="pos">+16.2%</td><td>52.0</td><td>唇彩/唇釉(23.54亿/55.1%)</td><td>高度集中</td></tr>
+      <tr><td><strong>美妆工具</strong></td><td><strong>23</strong></td><td><strong>26.06</strong></td><td class="pos"><strong>+37.1%</strong></td><td><strong>19.1</strong></td><td>假睫毛(9.74亿/37.4%)</td><td>一超多强</td></tr>
+      <tr><td>眼部彩妆</td><td>7</td><td>25.04</td><td class="pos">+30.7%</td><td>29.1</td><td>眼影(7.46亿/29.8%)</td><td>分散</td></tr>
+    </tbody>
+    <tfoot>
+      <tr><td>合计</td><td>54</td><td>268.57</td><td class="pos">+30.8%</td><td>46.4</td><td>—</td><td>—</td></tr>
+    </tfoot>
+  </table>
+  <div class="note"><span class="muted">加权增速均剔除极端低基数品类。四大类合计54个细分类目，268.57亿大盘。</span></div>
+
+  <h3 style="font-size:16px; margin: 28px 0 12px; color:#333;">6.2 维度一：价值链ASP阶梯</h3>
+  <div class="asp-ladder">
+    <div class="asp-bar" style="background:#e74c3c; height:100%;"><div class="asp-val">¥92</div><div class="asp-label">底妆</div></div>
+    <div class="asp-bar" style="background:#e67e22; height:78%;"><div class="asp-val">¥72</div><div class="asp-label">卸妆</div></div>
+    <div class="asp-bar" style="background:#f39c12; height:56%;"><div class="asp-val">¥52</div><div class="asp-label">唇妆</div></div>
+    <div class="asp-bar" style="background:#9b59b6; height:73%;"><div class="asp-val">¥67</div><div class="asp-label">定妆</div></div>
+    <div class="asp-bar" style="background:#3498db; height:43%;"><div class="asp-val">¥40</div><div class="asp-label">修饰</div></div>
+    <div class="asp-bar" style="background:#1abc9c; height:31%;"><div class="asp-val">¥29</div><div class="asp-label">眼妆</div></div>
+    <div class="asp-bar" style="background:#34495e; height:21%;"><div class="asp-val">¥19</div><div class="asp-label">工具</div></div>
+  </div>
+  <div class="insight-box">
+    <h4>ASP从"哑铃型"到"阶梯下行"</h4>
+    <p>
+      加入美妆工具后，彩妆价值链ASP呈清晰的<strong>阶梯下行</strong>：底妆(¥92) > 卸妆(¥72) > 定妆(¥67) > 唇妆(¥52) > 修饰(¥40) > 眼妆(¥29) > <strong>工具(¥19)</strong>。<br><br>
+      美妆工具是价值链的<strong>绝对谷底</strong>，ASP仅为底妆的1/4.8。但工具的加权增速+37.1%是四大类最高——<strong>"低价高频"正在追赶"高价低频"</strong>。这意味着消费者在彩妆上的支出结构正在变化：从"少量高价品"向"多量低价品"迁移，工具的"耗材属性"使得单次消费金额低但年度总支出可能更高。
+    </p>
+  </div>
+
+  <h3 style="font-size:16px; margin: 28px 0 12px; color:#333;">6.3 维度二：工具 vs 彩妆的"三种连带模式"</h3>
+  <table class="xcat-table">
+    <thead><tr><th>模式</th><th>工具品类</th><th>工具增速</th><th>服务彩妆</th><th>彩妆增速</th><th>关系</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>寄生型</strong></td>
+        <td>面扑/粉扑</td><td class="pos">+39.2%</td>
+        <td>气垫</td><td class="pos">+42%</td>
+        <td>工具≈彩妆，同频共振</td>
+      </tr>
+      <tr>
+        <td><strong>超越型</strong></td>
+        <td>睫毛夹</td><td class="pos">+103.0%</td>
+        <td>睫毛膏</td><td class="pos">+8%</td>
+        <td>工具>>彩妆，12.9倍差距</td>
+      </tr>
+      <tr>
+        <td><strong>滞后型</strong></td>
+        <td>修眉刀</td><td class="pos">+8.1%</td>
+        <td>眉笔/眉粉/眉膏</td><td class="pos">+33%</td>
+        <td>工具<<彩妆，仅1/4增速</td>
+      </tr>
+      <tr>
+        <td><strong>独立型</strong></td>
+        <td>双眼皮贴</td><td class="pos">+40.3%</td>
+        <td>—</td><td>—</td>
+        <td>不依附任何彩妆，原生需求</td>
+      </tr>
+      <tr>
+        <td><strong>被内化型</strong></td>
+        <td>假睫毛辅助工具</td><td class="neg">-51.5%</td>
+        <td>假睫毛</td><td class="pos">+25.4%</td>
+        <td>工具被上游产品整合，负相关</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="insight-box">
+    <h4>"超越型"的深层逻辑</h4>
+    <p>
+      睫毛夹(+103%)远超睫毛膏(+8%)，不是因为消费者不买睫毛膏了，而是因为<strong>假睫毛用户创造了独立的工具需求</strong>。假睫毛使用流程是"先夹自身睫毛→贴假睫毛→再夹合并"，每个假睫毛用户都需要一个睫毛夹，但不是每个都同时使用睫毛膏。工具的增长源从"彩妆用户"扩展到了"假睫毛用户"，这是一个<span class="highlight">使用场景扩张驱动的增长</span>，而非简单的彩妆连带。<br><br>
+      同理，修眉刀(+8%)远低于眉笔(+33%)，是因为修眉刀是耐用型工具（买一把用半年），而眉笔是耗材型（频繁消耗）。<strong>工具的"耐用属性"天然限制了其跟随彩妆增长的上限</strong>。
+    </p>
+  </div>
+
+  <h3 style="font-size:16px; margin: 28px 0 12px; color:#333;">6.4 维度三：品类替代模式对比</h3>
+  <table class="xcat-table">
+    <thead><tr><th>替代模式</th><th>被替代品类</th><th>替代者</th><th>机制</th><th>不可逆性</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>形态替代</strong></td>
+        <td>BB霜(-22%)</td>
+        <td>气垫(+42%)</td>
+        <td>液态→气垫，更便捷</td>
+        <td>高（消费习惯已迁移）</td>
+      </tr>
+      <tr>
+        <td><strong>价格替代</strong></td>
+        <td>有色唇膏/口红(+1%)</td>
+        <td>唇笔/唇线笔(+233%)</td>
+        <td>¥67→¥22，低价冲动消费</td>
+        <td>中（口红有不可替代的场景价值）</td>
+      </tr>
+      <tr>
+        <td><strong>功能内化</strong></td>
+        <td>假睫毛辅助工具(-51.5%)</td>
+        <td>假睫毛(+25.4%)</td>
+        <td>自粘型假睫毛内置了粘贴功能</td>
+        <td>高（产品升级不可逆）</td>
+      </tr>
+      <tr>
+        <td><strong>产品替代</strong></td>
+        <td>卸妆棉/化妆棉(-17.9%)</td>
+        <td>卸妆油/水/啫喱(+24%)</td>
+        <td>"棉片+卸妆水分离"→"一体化产品"</td>
+        <td>高（便捷性升级不可逆）</td>
+      </tr>
+      <tr>
+        <td><strong>通用→专业</strong></td>
+        <td>化妆/美容工具(-0.7%)</td>
+        <td>化妆刷(+33.6%)/套刷(+28.6%)</td>
+        <td>通用工具→专业细分工具</td>
+        <td>中（通用工具仍有下沉市场）</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="insight-box">
+    <h4>美妆工具的两种独家替代模式</h4>
+    <p>
+      "功能内化"和"通用→专业"是美妆工具独有的替代模式，在面部/唇部/眼部彩妆中不存在：<br>
+      <strong>功能内化</strong>：假睫毛辅助工具(-51.5%)被假睫毛产品自身整合。与BB霜→气垫的"外部替代"不同，这是上游产品<strong>内化了下游工具的功能</strong>（自粘假睫毛→不需要镊子和修剪工具），衰退更隐蔽。<br>
+      <strong>通用→专业</strong>：化妆/美容工具(-0.7%)作为"什么都能做"的通用品类，正在被专业细分的化妆刷、套刷、粉扑逐一蚕食。这类似于零售业中"百货商场→专卖店"的演变。
+    </p>
+  </div>
+
+  <h3 style="font-size:16px; margin: 28px 0 12px; color:#333;">6.5 维度四：增长动力公式</h3>
+  <div class="insight-box">
+    <h4>工具增长乘数公式</h4>
+    <div class="formula">工具增速 ≈ 所服务彩妆增速 × 耗材化系数 × 渗透率提升空间</div>
+    <p>用这个公式验证5个关键品类：</p>
+    <table>
+      <thead><tr><th>工具品类</th><th>服务彩妆</th><th>彩妆增速</th><th>耗材化</th><th>渗透率空间</th><th>预期增速</th><th>实际增速</th><th>偏差解读</th></tr></thead>
+      <tbody>
+        <tr><td>面扑/粉扑</td><td>气垫</td><td>+42%</td><td>高</td><td>中</td><td>~+40%</td><td class="pos">+39.2%</td><td>基本符合（寄生型）</td></tr>
+        <tr><td>睫毛夹</td><td>睫毛膏</td><td>+8%</td><td>低</td><td>高</td><td>~+25%</td><td class="pos">+103.0%</td><td><strong>远超预期</strong>（假睫毛用户新增需求）</td></tr>
+        <tr><td>修眉刀</td><td>眉笔</td><td>+33%</td><td>低</td><td>低</td><td>~+10%</td><td class="pos">+8.1%</td><td>基本符合（耐用型限制）</td></tr>
+        <tr><td>假睫毛胶水</td><td>假睫毛</td><td>+25%</td><td>高</td><td>中</td><td>~+30%</td><td class="pos">+13.0%</td><td><strong>低于预期</strong>（自粘型假睫毛减少胶水需求）</td></tr>
+        <tr><td>假睫毛辅助工具</td><td>假睫毛</td><td>+25%</td><td>低</td><td>—</td><td>~+10%</td><td class="neg">-51.5%</td><td><strong>严重低于预期</strong>（功能被内化）</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top:12px;">
+      公式揭示了一个关键规律：<strong>同一上游品类（假睫毛+25%）带动的下游工具增速可以从-51%到+103%，差距高达154个百分点</strong>。差异完全取决于"耗材化"和"渗透率空间"两个因子——假睫毛辅助工具因功能被内化而耗材化归零，睫毛夹因假睫毛用户的新增需求而渗透率空间爆发。
+    </p>
+  </div>
+</div>
+
+<!-- ===== 7. 品类生命周期 ===== -->
+<div class="section">
+  <h2>七、品类生命周期图谱</h2>
+  <div class="h2-sub">结合体量、增速、ASP、替代信号，判断23个品类所处的生命周期阶段</div>
+  <div class="lifecycle">
+    <div class="lc-stage lc-1">
+      <div class="lc-name" style="color:#27ae60;">🌱 导入期</div>
+      <div class="lc-items" style="color:#555;">
+        睫毛印章（新增）<br>
+        耳贴/耳挂（0.02亿）<br>
+        面膜碗（0.005亿）<br>
+        面部贴纸/彩绘/花钿（0.14亿）<br>
+        化妆印章（0.26亿）
+      </div>
+    </div>
+    <div class="lc-stage lc-2">
+      <div class="lc-name" style="color:#e67e22;">🚀 成长期</div>
+      <div class="lc-items" style="color:#555;">
+        <strong>睫毛夹（+103%）</strong><br>
+        <strong>双眼皮贴（+40%）</strong><br>
+        <strong>面扑/粉扑（+39%）</strong><br>
+        美妆蛋（+353%*）<br>
+        粉扑清洁剂（+303%*）<br>
+        DIY面膜工具（+198%*）<br>
+        化妆包/刷包（+158%*）
+      </div>
+    </div>
+    <div class="lc-stage lc-3">
+      <div class="lc-name" style="color:#e74c3c;">🏭 成熟期</div>
+      <div class="lc-items" style="color:#555;">
+        <strong>假睫毛（+25%）</strong><br>
+        洗脸刷/化妆刷（+34%）<br>
+        化妆套刷（+29%）<br>
+        吸油纸（+26%）<br>
+        假睫毛胶水（+13%）<br>
+        镊子/粉刺针（+16%）<br>
+        修眉刀（+8%）<br>
+        双眼皮胶水（+39%）
+      </div>
+    </div>
+    <div class="lc-stage lc-4">
+      <div class="lc-name" style="color:#8e44ad;">📉 衰退期</div>
+      <div class="lc-items" style="color:#555;">
+        <strong>假睫毛辅助工具（-51.5%）</strong><br>
+        <strong>卸妆棉/化妆棉（-17.9%）</strong><br>
+        <strong>化妆/美容工具（-0.7%）</strong>
+      </div>
+    </div>
+  </div>
+  <div class="insight-box">
+    <h4>生命周期迁移信号</h4>
+    <p>
+      <strong>假睫毛正在从"成熟期"向"衰退期前夜"过渡</strong>：虽然+25.4%的增速仍然健康，但增量效率仅0.99x（见第四节），且其下游的假睫毛胶水（+13%）和假睫毛辅助工具（-51.5%）增速均低于假睫毛本身——这是<strong>生态链"见顶信号"</strong>：上游产品增速开始放缓，下游配套率先衰退。预计假睫毛未来1-2年增速将回落至+15-20%区间。<br><br>
+      <strong>睫毛夹正处于"成长期"爆发点</strong>：+103%的增速且非低基数（去年基期~3400万），渗透率提升空间巨大。增长动力来自假睫毛用户的新增工具需求，而非睫毛膏用户——这意味着只要假睫毛大盘仍在增长，睫毛夹就有持续的增长动能。
+    </p>
+  </div>
+</div>
+
+<!-- ===== 8. 机会排序 ===== -->
+<div class="section">
+  <h2>八、机会排序</h2>
+  <div class="h2-sub">综合体量、增速、增量效率、生命周期阶段、跨品类连带效应，给出最终机会判断</div>
+
+  <!-- 强烈推荐 -->
+  <div class="rank-item rec">
+    <div class="rank-badge rec">1</div>
+    <div class="rank-content">
+      <h4>假睫毛 · 强烈推荐</h4>
+      <div class="rank-meta">9.74亿 / +25.4% / ASP ¥18.29 / 增量1.98亿 / 效率0.99x</div>
+      <div class="rank-reason">
+        超级龙头品类，占大盘37.4%。虽然是"惯性增长"阶段（效率~1.0x），但绝对增量1.98亿仍是全品类最大。耗材属性保证高频复购，假睫毛使用习惯一旦形成极难逆转。<strong>核心风险</strong>：生态链见顶信号已现（胶水+13%、辅助工具-51.5%），增速可能逐步放缓，需关注自粘型产品对配套品类的持续冲击。
+      </div>
+    </div>
+  </div>
+
+  <div class="rank-item rec">
+    <div class="rank-badge rec">2</div>
+    <div class="rank-content">
+      <h4>面扑/粉扑 · 强烈推荐</h4>
+      <div class="rank-meta">3.79亿 / +39.2% / ASP ¥20.53 / 增量1.07亿 / 效率1.38x</div>
+      <div class="rank-reason">
+        第二大体量×高增速×耗材属性，三重利好叠加。寄生型增长跟随气垫(+42%)，只要气垫大盘不衰退就有持续动力。增量效率1.38x说明增长超额。<strong>跨品类验证</strong>：粉扑增速(+39.2%)与气垫增速(+42%)高度同步，是四大类中工具-彩妆连带关系最紧密的一对。
+      </div>
+    </div>
+  </div>
+
+  <div class="rank-item rec">
+    <div class="rank-badge rec">3</div>
+    <div class="rank-content">
+      <h4>睫毛卷翘工具/睫毛夹 · 强烈推荐</h4>
+      <div class="rank-meta">0.70亿 / +103.0% / ASP ¥24.02 / 增量0.35亿 / 效率2.44x</div>
+      <div class="rank-reason">
+        全品类增速冠军（剔除低基数后），增量效率2.44x是T1-T2品类中最高的。增长逻辑独特——不依赖睫毛膏(+8%)，而是由假睫毛(+25%)用户的新增工具需求驱动。<strong>关键判断</strong>：只要假睫毛大盘保持正增长，睫毛夹就有独立的增长源。耐用型属性限制了复购，但渗透率提升空间巨大（当前仅291万件销量 vs 假睫毛5327万件）。
+      </div>
+    </div>
+  </div>
+
+  <!-- 推荐 -->
+  <div class="rank-item watch">
+    <div class="rank-badge watch">4</div>
+    <div class="rank-content">
+      <h4>双眼皮贴 · 推荐</h4>
+      <div class="rank-meta">1.71亿 / +40.3% / ASP ¥12.83 / 增量0.49亿 / 效率1.42x</div>
+      <div class="rank-reason">
+        独立型增长——不依附任何彩妆品类，满足"眼型改造"刚性需求。ASP仅¥12.83是全品类最低之一，日抛型耗材属性极强，高频复购驱动。增量效率1.42x超额。抗周期能力优于寄生型品类（粉扑），因为不受气垫/底妆大盘波动影响。
+      </div>
+    </div>
+  </div>
+
+  <div class="rank-item watch">
+    <div class="rank-badge watch">5</div>
+    <div class="rank-content">
+      <h4>洗脸刷/化妆刷 · 推荐</h4>
+      <div class="rank-meta">2.19亿 / +33.6% / ASP ¥20.78 / 增量0.55亿 / 效率1.23x</div>
+      <div class="rank-reason">
+        稳健型增长主力，体量第三、增量第三。增长来自刷具消费升级（从"一支刷走天下"到"专业细分"）。耐用型属性限制了复购频率，但套装化趋势（套刷+28.6%）正在将耐用品向半耗材转化，延长了品类的增长天花板。
+      </div>
+    </div>
+  </div>
+
+  <div class="rank-item watch">
+    <div class="rank-badge watch">6</div>
+    <div class="rank-content">
+      <h4>化妆套刷 · 推荐</h4>
+      <div class="rank-meta">1.30亿 / +28.6% / ASP ¥31.49 / 增量0.29亿 / 效率1.08x</div>
+      <div class="rank-reason">
+        ASP ¥31.49是刷具链中最高，套装化溢价明显。增速+28.6%稳健，背后是消费者从"单支购买"向"套装购买"的升级趋势。与化妆包/刷包(+158%)形成"工具+收纳"的连带消费场景。
+      </div>
+    </div>
+  </div>
+
+  <!-- 观察 -->
+  <div class="rank-item hold">
+    <div class="rank-badge hold">7</div>
+    <div class="rank-content">
+      <h4>美妆蛋/化妆海绵 · 观察</h4>
+      <div class="rank-meta">0.40亿 / +353.2%* / ASP ¥18.93 / 增量0.31亿 / 效率3.87x</div>
+      <div class="rank-reason">
+        低基数效应（去年基期~879万），+353%数字不具参考意义。但方向正确：上妆工具从可选变必选，与粉扑形成"平面（粉扑）+立体（美妆蛋）"的上妆工具组合。<strong>判断标准</strong>：明年能否突破1亿体量，若能则确认品类升级。
+      </div>
+    </div>
+  </div>
+
+  <div class="rank-item hold">
+    <div class="rank-badge hold">8</div>
+    <div class="rank-content">
+      <h4>粉扑/化妆刷清洁剂 · 观察</h4>
+      <div class="rank-meta">0.12亿 / +303.4%* / ASP ¥16.78 / 增量0.09亿 / 效率4.25x</div>
+      <div class="rank-reason">
+        增量效率全品类最高(4.25x)，但体量极小(0.12亿)。增长逻辑是"美妆卫生意识"觉醒——从"用到坏再换"到"定期清洁"。若卫生意识持续提升，有望成为工具类的新增标配品类。<strong>类比</strong>：类似于口腔护理中"漱口水"从可选变必选的路径。
+      </div>
+    </div>
+  </div>
+
+  <div class="rank-item hold">
+    <div class="rank-badge hold">9</div>
+    <div class="rank-content">
+      <h4>DIY面膜工具 · 观察</h4>
+      <div class="rank-meta">0.49亿 / +198.4%* / ASP ¥51.01 / 增量0.33亿 / 效率3.26x</div>
+      <div class="rank-reason">
+        去年基期~1643万，+198%部分为低基数效应但不算极端。ASP ¥51.01是主流品类中最高，功能复合溢价明显。增长动力来自"DIY面膜"内容在短视频平台的持续传播。<strong>风险</strong>：DIY面膜本身可能是一阵风潮，需观察是否形成稳定使用习惯。
+      </div>
+    </div>
+  </div>
+
+  <!-- 避免 -->
+  <div class="rank-item avoid">
+    <div class="rank-badge avoid">10</div>
+    <div class="rank-content">
+      <h4>假睫毛辅助工具 · 避免</h4>
+      <div class="rank-meta">0.33亿 / -51.5% / ASP ¥18.15 / 增量-0.35亿 / 效率-5.08x</div>
+      <div class="rank-reason">
+        全品类最大失血点，增量效率-5.08x。被假睫毛产品自身功能内化（自粘型假睫毛的普及），属于"功能内化型衰退"，不可逆。与BB霜被气垫"外部替代"不同，功能内化是上游产品升级的自然结果，无法通过下游工具自身的改进来逆转。
+      </div>
+    </div>
+  </div>
+
+  <div class="rank-item avoid">
+    <div class="rank-badge avoid">11</div>
+    <div class="rank-content">
+      <h4>卸妆棉/化妆棉 · 避免</h4>
+      <div class="rank-meta">0.41亿 / -17.9% / ASP ¥17.42 / 增量-0.09亿 / 效率-1.06x</div>
+      <div class="rank-reason">
+        被"卸妆油/卸妆水/卸妆啫喱"（14.90亿/+24%）一体化产品替代。"棉片+卸妆水分离"的使用方式正在被便捷的一体化卸妆产品取代。跨品类验证：面部彩妆中卸妆品类体量15.49亿且+24.5%，工具类卸妆棉-17.9%——同一需求，产品形态升级导致工具被淘汰。
+      </div>
+    </div>
+  </div>
+
+  <div class="rank-item avoid">
+    <div class="rank-badge avoid">12</div>
+    <div class="rank-content">
+      <h4>化妆/美容工具 · 避免</h4>
+      <div class="rank-meta">2.60亿 / -0.7% / ASP ¥21.56 / 增量-0.02亿 / 效率-0.03x</div>
+      <div class="rank-reason">
+        通用品类停滞（-0.7%），正在被专业细分的化妆刷(+33.6%)、套刷(+28.6%)、粉扑(+39.2%)逐一蚕食。虽然体量仍大(2.60亿)，但这是"百货商场式"的渐进衰退——不会断崖式下跌，但市场份额持续被专业品类侵蚀。类似于零售业中"百货商场→专卖店"的演变。
+      </div>
+    </div>
+  </div>
+
+  <div class="rank-item avoid">
+    <div class="rank-badge avoid">13</div>
+    <div class="rank-content">
+      <h4>修眉刀 · 避免</h4>
+      <div class="rank-meta">0.32亿 / +8.1% / ASP ¥7.02 / 增量0.02亿 / 效率0.33x</div>
+      <div class="rank-reason">
+        虽然正增长，但增量效率仅0.33x——以1.2%的体量仅产出0.4%的增量。ASP ¥7.02是全品类最低，低价走量但利润空间极薄。耐用型属性（买一把用半年）限制了复购频率，且增速(+8.1%)远低于所服务的眉笔(+33%)，工具严重滞后于彩妆。
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== 总结 ===== -->
+<div class="section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff;">
+  <h2 style="color: #fff; border-left-color: #fff;">总结：美妆工具的三个结构性判断</h2>
+  <div style="margin-top: 20px; line-height: 2.2; font-size: 14px;">
+    <p style="margin-bottom: 16px;">
+      <strong>1. 假睫毛定义了美妆工具的大盘走向。</strong>一个品类贡献了37%体量、37%增量，在四大类54个品类中集中度最高。假睫毛生态链（11.41亿/43.8%）的健康度直接决定整个工具大盘的走势。但生态链内部已出现见顶信号——辅助工具-51.5%、胶水+13%均低于主品类+25.4%，需密切关注增速拐点。
+    </p>
+    <p style="margin-bottom: 16px;">
+      <strong>2. "工具反超彩妆"是本组数据最重要的发现。</strong>睫毛夹(+103%) vs 睫毛膏(+8%)的12.9倍增速差，在四大类中没有先例。工具增长不只来自所服务彩妆的连带，更来自使用场景的扩张（假睫毛用户的新增工具需求）。增长乘数公式（彩妆增速 × 耗材化 × 渗透率空间）可以解释-51%到+103%的增速差异。
+    </p>
+    <p>
+      <strong>3. 美妆工具是价值链的"价格谷底"但增速最高。</strong>ASP ¥19.1仅为底妆(¥92)的1/4.8，但加权增速+37.1%领跑四大类。"低价高频"正在追赶"高价低频"——消费者在工具上的年度总支出（高频复购×低单价）可能已接近部分彩妆品类。耗材型品类（假睫毛、粉扑、双眼皮贴）的增长具有"滚雪球"效应，耐用品正在通过套装化向半耗材转化。
+    </p>
+  </div>
+</div>
+
+</div>
+</body>
+</html>
