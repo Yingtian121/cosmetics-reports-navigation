@@ -15278,7 +15278,9 @@ function filterCards(q) {
 }
 // 侧边栏展开定位
 function openCard(num) {
-  const el = document.getElementById('report-' + num);
+  // 兼容传入数字(可能被解析为八进制,如04→4)或字符串，统一补零为两位数ID
+  const padded = String(Number(num)).padStart(2, '0');
+  const el = document.getElementById('report-' + padded) || document.getElementById('report-' + num);
   if (el) { el.open = true; el.scrollIntoView({ behavior:'smooth', block:'start' }); }
 }
 function toggleAll(open) {
