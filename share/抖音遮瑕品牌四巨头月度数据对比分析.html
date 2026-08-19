@@ -1,298 +1,134 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<title>抖音遮瑕品牌四巨头月度数据对比（25年3月-26年7月）</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<style>
-:root{--bg:#faf9f6;--card:#fff;--border:#e0dce8;--ac:#1a5e2a;--t:#2c2c2c;--t2:#666;--m:#999}
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--t);line-height:1.75;padding:20px}
-.container{max-width:1100px;margin:0 auto}
-.header{text-align:center;padding:36px 32px;background:linear-gradient(135deg,#1a0d30,#3a1a60);color:#e8e6f0;border-radius:14px 14px 0 0}
-.header h1{font-size:20px;font-weight:700}
-.header .sub{font-size:13px;color:#a89ec8;margin-top:4px}
-.header .meta{margin-top:6px;font-size:11px;color:#7a6e9a}
-.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px 20px;background:var(--card);border:1px solid var(--border);border-top:none}
-.kpi{text-align:center}
-.kpi .v{font-size:20px;font-weight:700}
-.kpi .l{font-size:11px;color:var(--t2)}
-.section{background:var(--card);border-radius:12px;padding:20px 24px;margin-top:13px;border:1px solid var(--border)}
-.st{font-size:16px;font-weight:700;margin-bottom:3px;padding-left:10px;border-left:4px solid var(--ac)}
-.sd{font-size:11.5px;color:var(--m);margin-bottom:12px;padding-left:10px}
-.conclude{background:#eef2f8;border-left:4px solid var(--ac);border-radius:8px;padding:10px 16px;margin-top:12px}
-.conclude .ct{font-weight:700;color:var(--ac);font-size:12px;margin-bottom:2px}
-.conclude .cd{font-size:12px;color:#444;line-height:1.8}
-.chart-w{position:relative;width:100%;height:350px}
-table.c{width:100%;border-collapse:collapse;font-size:12px}
-table.c th{background:#f0edf6;padding:7px 8px;text-align:center;font-weight:600;color:#444;border-bottom:2px solid var(--border)}
-table.c td{text-align:center;padding:6px 8px;border-bottom:1px solid #f0edf6}
-.brand-badge{display:inline-block;padding:1px 8px;border-radius:3px;color:#fff;font-size:11px;font-weight:600}
-.rank-up{color:#1e7d4f;font-weight:600}
-.rank-dn{color:#c0392b;font-weight:600}
-.footer{text-align:center;padding:14px;font-size:10.5px;color:var(--m);background:var(--card);border-radius:0 0 12px 12px;border:1px solid var(--border);border-top:none}
-.brand-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:4px}
-.bcrd{text-align:center;padding:12px 6px;border-radius:8px;color:#fff}
-.bcrd .bv{font-size:20px;font-weight:700}
-.bcrd .bl{font-size:10px;opacity:0.85;margin-top:2px}
-.legend-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--t2);margin-bottom:10px}
-.legend-row samp{display:inline-block;width:12px;height:12px;border-radius:3px}
-</style>
-</head>
-<body>
-<div class="container">
-<div class="header">
-<h1>抖音遮瑕品类 · 四品牌月度数据对比分析</h1>
-<div class="sub">BABI × 三资堂 × Girls Crush × forever key</div>
-<div class="meta">数据周期：25年3月 - 26年7月（17个月） | 数据源：抖音遮瑕品牌月度TOP100数据 | 平台：抖音 | 单位：万元</div>
-</div>
-
-<!-- KPI -->
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>抖音遮瑕四品牌 · 细分渠道下钻分析</title><script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script><style>
+:root{--bg:#f5efe4;--card:#ffffff;--ink:#2b2418;--sub:#8a7d67;--line:#e8ddc8;--gold:#c9a15a;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);}
+.layout{display:flex;min-height:100vh;}
+/* 左侧目录 */
+.sidebar{width:250px;background:#211c15;color:#e8dcc3;position:fixed;top:0;left:0;bottom:0;overflow-y:auto;padding:22px 0;z-index:50;}
+.sidebar .logo{padding:0 22px 16px;border-bottom:1px solid #3a3227;}
+.sidebar .logo .t1{font-size:15px;font-weight:700;color:#f5ead2;line-height:1.4;}
+.sidebar .logo .t2{font-size:11px;color:#9b8e72;margin-top:4px;}
+.nav-group{padding:14px 22px 4px;font-size:11px;letter-spacing:1px;color:#7d7159;font-weight:600;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 22px;cursor:pointer;color:#cbbfa4;font-size:13px;transition:all .15s;border-left:3px solid transparent;}
+.nav-item:hover{background:#2c2519;color:#f5ead2;}
+.nav-item.active{background:#332a1c;color:#f5ead2;border-left-color:var(--gold);}
+.nav-item .num{width:20px;height:20px;border-radius:50%;background:#3a3227;color:#c9a15a;font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;}
+.nav-item.active .num{background:var(--gold);color:#211c15;}
+/* 主内容 */
+.main{margin-left:250px;flex:1;padding:32px 40px;max-width:1200px;}
+.hero{background:linear-gradient(120deg,#2a2118,#4a3a28);border-radius:16px;padding:30px 34px;color:#f2e8d5;margin-bottom:28px;}
+.hero .badge{display:inline-block;background:rgba(201,161,90,.2);color:#e0c184;border:1px solid rgba(201,161,90,.4);font-size:11px;padding:3px 12px;border-radius:20px;margin-bottom:12px;}
+.hero h1{font-size:24px;font-weight:700;line-height:1.35;}
+.hero .sub{font-size:13px;color:#b9aa8d;margin-top:10px;line-height:1.7;}
+.hero .kpis{display:flex;gap:14px;margin-top:20px;flex-wrap:wrap;}
+.hero .kpi{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px 18px;flex:1;min-width:140px;}
+.hero .kpi .v{font-size:22px;font-weight:700;color:#f5ead2;}
+.hero .kpi .l{font-size:11px;color:#a99a7f;margin-top:4px;}
+/* 板块 */
+section{margin-bottom:40px;}
+.sec-title{display:flex;align-items:center;gap:10px;font-size:19px;font-weight:700;margin-bottom:6px;color:var(--ink);}
+.sec-title .bar{width:4px;height:22px;background:var(--gold);border-radius:2px;}
+.sec-desc{font-size:12.5px;color:var(--sub);margin-bottom:18px;line-height:1.6;}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin-bottom:18px;box-shadow:0 2px 8px rgba(0,0,0,.03);}
+.card .ct{font-size:15px;font-weight:700;margin-bottom:14px;color:var(--ink);}
+.card .cs{font-size:11.5px;color:var(--sub);margin-bottom:14px;}
+.chart-w{position:relative;height:360px;}
+.chart-w.tall{height:420px;}
+.chart-w.h340{height:340px;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+@media(max-width:900px){.grid2{grid-template-columns:1fr;}.sidebar{width:210px;}.main{margin-left:210px;padding:20px;}}
+/* 品牌头卡 */
+.brand-head{border-radius:14px;padding:24px 28px;color:#fff;margin-bottom:18px;}
+.brand-head .bt{font-size:20px;font-weight:700;}
+.brand-head .tag{font-size:12px;opacity:.85;margin-top:5px;}
+.brand-head .kpis{display:flex;gap:14px;margin-top:16px;flex-wrap:wrap;}
+.brand-head .kpi{background:rgba(255,255,255,.14);border-radius:10px;padding:12px 16px;flex:1;min-width:110px;}
+.brand-head .kpi .v{font-size:20px;font-weight:700;}
+.brand-head .kpi .l{font-size:11px;opacity:.8;margin-top:3px;}
+/* 结论块 */
+.conclude{background:#fbf6ea;border-left:4px solid var(--gold);border-radius:0 10px 10px 0;padding:16px 20px;margin-top:16px;}
+.conclude .ct{font-size:13px;font-weight:700;color:#a5813c;margin-bottom:8px;}
+.conclude .cd{font-size:13px;line-height:1.8;color:#5c5342;}
+.conclude .cd b{color:var(--ink);}
+/* 渠道图例 */
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 4px;}
+.legend .li{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--sub);}
+.legend .dot{width:10px;height:10px;border-radius:3px;display:inline-block;}
+.foot{text-align:center;color:#a99a7f;font-size:11.5px;padding:16px 0 30px;line-height:1.7;}
+</style></head><body><div class="layout"><nav class="sidebar" id="sidebar"><div class="logo"><div class="t1">抖音遮瑕四品牌<br>细分渠道下钻分析</div><div class="t2">BABI · 三资堂 · Girls Crush · forever key</div></div><div class="nav-group">数据总览</div><div class="nav-item" data-target="sec-struct"><span class="num">01</span>渠道结构总览</div><div class="nav-item" data-target="sec-gmv"><span class="num">02</span>月度GMV对比</div><div class="nav-group">品牌渠道下钻</div><div class="nav-item" data-target="sec-babi"><span class="num">03</span>BABI 渠道下钻</div><div class="nav-item" data-target="sec-szt"><span class="num">04</span>三资堂 渠道下钻</div><div class="nav-item" data-target="sec-gc"><span class="num">05</span>Girls Crush 渠道下钻</div><div class="nav-item" data-target="sec-fk"><span class="num">06</span>forever key 渠道下钻</div></nav><main class="main"><div class="hero">
+<div class="badge">遮瑕品类 · 抖音细分渠道拆解</div>
+<h1>四品牌渠道结构下钻分析</h1>
+<div class="sub">拆解 BABI / 三资堂 / Girls Crush / forever key 在抖音平台的自播、达播、自营短视频、达短（合作短视频）、商品卡五大渠道的销售额与占比。<br>数据周期：2025-01 ~ 2026-07（forever key 为 2025-08 起，且总销售额字段缺失，仅保留渠道占比口径）。</div>
 <div class="kpis">
-<div class="kpi"><div class="v">12877.9万</div><div class="l">BABI累计GMV</div></div>
-<div class="kpi"><div class="v">3836.0万</div><div class="l">三资堂累计GMV</div></div>
-<div class="kpi"><div class="v">15447.2万</div><div class="l">Girls Crush累计GMV</div></div>
-<div class="kpi"><div class="v">23274.7万</div><div class="l">forever key累计GMV</div></div>
-</div>
+<div class="kpi"><div class="v">5</div><div class="l">细分渠道</div></div>
+<div class="kpi"><div class="v">19个月</div><div class="l">覆盖周期</div></div>
+<div class="kpi"><div class="v">3种</div><div class="l">渠道结构类型</div></div>
+<div class="kpi"><div class="v">短视频</div><div class="l">品类核心驱动力</div></div>
+</div></div><section id="sec-struct"><div class="sec-title"><span class="bar"></span>01 · 渠道结构总览</div><div class="sec-desc">四品牌在五大渠道的销售额占比对比（forever key 因总销售额缺失，采用月度占比均值口径）。堆叠柱总长=100%。</div><div class="card"><div class="ct">品牌渠道结构对比（%）</div><div class="cs">横向 100% 堆叠柱 · 颜色代表渠道</div><div class="legend"><span class="li"><span class="dot" style="background:#F0A03C"></span>自播</span><span class="li"><span class="dot" style="background:#E05A4E"></span>达播</span><span class="li"><span class="dot" style="background:#5A9E6F"></span>自营短视频</span><span class="li"><span class="dot" style="background:#9B7BD4"></span>达短</span><span class="li"><span class="dot" style="background:#4F86C6"></span>商品卡</span></div><div class="chart-w h340"><canvas id="chStruct"></canvas></div></div><div class="conclude" id="concl-struct"></div></section><section id="sec-gmv"><div class="sec-title"><span class="bar"></span>02 · 月度GMV对比</div><div class="sec-desc">四品牌抖音月销售额走势（万元，修正后口径，BABI 9月/11月已合并同月重复条目）。</div><div class="card"><div class="ct">月度销售额趋势（万元）</div><div class="cs">点击图例可隐藏/显示品牌</div><div class="chart-w h340"><canvas id="chGmv"></canvas></div></div><div class="conclude"><div class="ct">▲ 板块结论</div><div class="cd">四品牌呈现<b>三种成长路径</b>：forever key 为常青型（17个月全勤、累计2.33亿领跑）；BABI 为爆发型（25年3月仅8万→26年4-6月连续登顶）；三资堂为火箭型（26年5月才入局、7月即2449万登顶）；Girls Crush 为稳健型（始终前5）。<b>26年7月格局</b>：三资堂#1、BABI#2、forever key#3、Girls Crush#4。</div></div></section><section id="sec-babi"><div class="sec-title"><span class="bar" style="background:#D4533A"></span>03 · BABI 渠道下钻</div><div class="brand-head" style="background:linear-gradient(120deg,#D4533A,#D4533Acc)"><div class="bt">BABI</div><div class="tag">短视频 + 商品卡驱动型 · 有效月份 17 个月</div><div class="kpis"><div class="kpi"><div class="v">11880万</div><div class="l">累计销售额</div></div><div class="kpi"><div class="v">自营短视频</div><div class="l">主导渠道</div></div><div class="kpi"><div class="v">62.9%</div><div class="l">主导渠道占比</div></div></div></div><div class="grid2"><div class="card"><div class="ct">渠道结构占比（%）</div><div class="cs">五大渠道销售额占比（累计口径）</div><div class="chart-w h340"><canvas id="donut_BABI"></canvas></div></div><div class="card"><div class="ct">渠道占比月度趋势（%）</div><div class="cs">100% 堆叠 · 观察渠道结构随时间迁移</div><div class="chart-w h340"><canvas id="stack_BABI"></canvas></div></div></div><div class="conclude" id="concl_BABI"></div></section><section id="sec-szt"><div class="sec-title"><span class="bar" style="background:#1A5E2A"></span>04 · 三资堂 渠道下钻</div><div class="brand-head" style="background:linear-gradient(120deg,#1A5E2A,#1A5E2Acc)"><div class="bt">三资堂</div><div class="tag">极致短视频爆发型 · 有效月份 3 个月</div><div class="kpis"><div class="kpi"><div class="v">3539万</div><div class="l">累计销售额</div></div><div class="kpi"><div class="v">自营短视频</div><div class="l">主导渠道</div></div><div class="kpi"><div class="v">84.0%</div><div class="l">主导渠道占比</div></div></div></div><div class="grid2"><div class="card"><div class="ct">渠道结构占比（%）</div><div class="cs">五大渠道销售额占比（累计口径）</div><div class="chart-w h340"><canvas id="donut_三资堂"></canvas></div></div><div class="card"><div class="ct">渠道占比月度趋势（%）</div><div class="cs">100% 堆叠 · 观察渠道结构随时间迁移</div><div class="chart-w h340"><canvas id="stack_三资堂"></canvas></div></div></div><div class="conclude" id="concl_三资堂"></div></section><section id="sec-gc"><div class="sec-title"><span class="bar" style="background:#6A4A9A"></span>05 · Girls Crush 渠道下钻</div><div class="brand-head" style="background:linear-gradient(120deg,#6A4A9A,#6A4A9Acc)"><div class="bt">Girls Crush</div><div class="tag">五渠道均衡分销型 · 有效月份 17 个月</div><div class="kpis"><div class="kpi"><div class="v">14251万</div><div class="l">累计销售额</div></div><div class="kpi"><div class="v">自营短视频</div><div class="l">主导渠道</div></div><div class="kpi"><div class="v">34.1%</div><div class="l">主导渠道占比</div></div></div></div><div class="grid2"><div class="card"><div class="ct">渠道结构占比（%）</div><div class="cs">五大渠道销售额占比（累计口径）</div><div class="chart-w h340"><canvas id="donut_Girls Crush"></canvas></div></div><div class="card"><div class="ct">渠道占比月度趋势（%）</div><div class="cs">100% 堆叠 · 观察渠道结构随时间迁移</div><div class="chart-w h340"><canvas id="stack_Girls Crush"></canvas></div></div></div><div class="conclude" id="concl_Girls Crush"></div></section><section id="sec-fk"><div class="sec-title"><span class="bar" style="background:#3A6B8A"></span>06 · forever key 渠道下钻</div><div class="brand-head" style="background:linear-gradient(120deg,#3A6B8A,#3A6B8Acc)"><div class="bt">forever key</div><div class="tag">短视频 + 货架成熟型 · 有效月份 12 个月</div><div class="kpis"><div class="kpi"><div class="v">缺失(仅占比)</div><div class="l">销售额口径</div></div><div class="kpi"><div class="v">自营短视频</div><div class="l">主导渠道</div></div><div class="kpi"><div class="v">50.0%</div><div class="l">主导渠道占比</div></div></div></div><div class="grid2"><div class="card"><div class="ct">渠道结构占比（%）</div><div class="cs">五大渠道销售额占比（月度占比均值）</div><div class="chart-w h340"><canvas id="donut_forever key"></canvas></div></div><div class="card"><div class="ct">渠道占比月度趋势（%）</div><div class="cs">100% 堆叠 · 观察渠道结构随时间迁移</div><div class="chart-w h340"><canvas id="stack_forever key"></canvas></div></div></div><div class="conclude" id="concl_forever key"></div></section><div class="foot">抖音遮瑕四品牌 · 细分渠道下钻分析 | 数据源：飞书多维表格「遮瑕核心竞品细分渠道销售额」 | 平台：抖音 | 单位：销售额=元/万元，占比=%<br>渠道口径：自播=品牌自营直播，达播=达人直播，自营短视频=品牌官方短视频，达短=达人合作短视频，商品卡=货架/商城商品卡</div></main></div><script>const CHANNELS=["自播", "达播", "自营短视频", "达短", "商品卡"];const CH_COLOR={"自播": "#F0A03C", "达播": "#E05A4E", "自营短视频": "#5A9E6F", "达短": "#9B7BD4", "商品卡": "#4F86C6"};const BRAND_COLOR={"BABI": "#D4533A", "三资堂": "#1A5E2A", "Girls Crush": "#6A4A9A", "forever key": "#3A6B8A"};const OVERVIEW={"BABI": {"自播": 6.2, "达播": 10.3, "自营短视频": 62.9, "达短": 2.9, "商品卡": 13.6}, "三资堂": {"自播": 2.4, "达播": 8.4, "自营短视频": 84.0, "达短": 0.0, "商品卡": 4.2}, "Girls Crush": {"自播": 3.6, "达播": 8.9, "自营短视频": 34.1, "达短": 10.0, "商品卡": 21.7}, "forever key": {"自播": 8.9, "达播": 13.5, "自营短视频": 50.0, "达短": 9.0, "商品卡": 17.6}};const GMV={"BABI": [7.9, 44.6, 53.6, 126.6, 193.0, 183.4, 231.9, 328.6, 597.8, 833.9, 1675.7, 1530.0, 1243.1, 1622.3, 1527.2, 1602.0, 1076.4], "三资堂": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 226.5, 1160.8, 2448.7], "Girls Crush": [545.8, 585.4, 526.6, 493.9, 792.8, 668.4, 863.0, 1162.8, 903.6, 1057.8, 1395.5, 906.7, 1024.6, 1229.9, 1385.1, 1061.5, 843.9], "forever key": [1978.8, 1349.4, 1295.8, 1906.5, 1696.8, 1507.2, 1381.2, 1249.8, 1114.9, 1296.8, 1417.5, 1590.2, 1343.8, 1157.4, 1043.2, 1026.7, 918.8]};const GMV_LABELS=["2025/03", "2025/04", "2025/05", "2025/06", "2025/07", "2025/08", "2025/09", "2025/10", "2025/11", "2025/12", "2026/01", "2026/02", "2026/03", "2026/04", "2026/05", "2026/06", "2026/07"];const BRAND_DATA={"BABI": {"valid_n": 17, "months": ["2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07"], "total": 118801381.0, "has_sales": true, "ch_struct": {"自播": 6.2, "达播": 10.3, "自营短视频": 62.9, "达短": 2.9, "商品卡": 13.6}, "ch_sales": {"自播": 7390403.7104865, "达播": 12239844.32764, "自营短视频": 74683221.3951, "达短": 3476701.7535, "商品卡": 16144680.3084}, "monthly_pct": {"自播": [0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.0, 16.7, 8.7, 4.1, 6.2, 6.6, 6.2, 6.9, 6.3, 6.1, 6.5], "达播": [0.0, 0.0, 0.0, 0.0, 0.0, 4.9, 11.5, 14.3, 21.0, 10.4, 11.6, 11.2, 8.4, 8.0, 7.3, 9.2, 16.2], "自营短视频": [0.0, 0.0, 0.0, 0.0, 0.0, 59.1, 52.5, 39.8, 46.2, 62.2, 66.2, 66.7, 69.0, 69.4, 70.8, 70.3, 57.5], "达短": [0.0, 0.0, 0.0, 0.0, 0.0, 6.8, 6.2, 4.1, 5.3, 4.3, 2.7, 1.8, 3.5, 3.5, 2.2, 2.1, 2.8], "商品卡": [0.0, 0.0, 0.0, 0.0, 0.0, 28.2, 28.8, 24.4, 17.9, 18.3, 13.1, 13.2, 12.2, 11.5, 12.4, 11.0, 15.5]}}, "三资堂": {"valid_n": 3, "months": ["2026-05", "2026-06", "2026-07"], "total": 35392119.0, "has_sales": true, "ch_struct": {"自播": 2.4, "达播": 8.4, "自营短视频": 84.0, "达短": 0.0, "商品卡": 4.2}, "ch_sales": {"自播": 840545.427, "达播": 2972220.512, "自营短视频": 29724222.86, "达短": 2700.382052, "商品卡": 1483734.4712999999}, "monthly_pct": {"自播": [0.0, 0.0, 3.7], "达播": [0.0, 0.0, 13.2], "自营短视频": [92.9, 94.7, 78.1], "达短": [0.0, 0.0, 0.0], "商品卡": [6.0, 4.4, 3.9]}}, "Girls Crush": {"valid_n": 17, "months": ["2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07"], "total": 142509592.0, "has_sales": true, "ch_struct": {"自播": 3.6, "达播": 8.9, "自营短视频": 34.1, "达短": 10.0, "商品卡": 21.7}, "ch_sales": {"自播": 5176749.6731, "达播": 12750132.9484, "自营短视频": 48589481.475999996, "达短": 14291470.6795, "商品卡": 30903565.277}, "monthly_pct": {"自播": [0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 3.0, 2.9, 5.3, 4.4, 4.6, 7.3, 5.0, 3.8, 4.5, 5.8, 5.0], "达播": [0.0, 0.0, 0.0, 0.0, 0.0, 13.3, 11.9, 10.4, 10.5, 13.3, 12.0, 14.4, 16.5, 8.7, 6.5, 6.8, 11.5], "自营短视频": [0.0, 0.0, 0.0, 0.0, 0.0, 35.6, 45.0, 44.3, 36.5, 34.9, 38.5, 30.7, 32.3, 46.6, 58.7, 52.2, 40.3], "达短": [0.0, 0.0, 0.0, 0.0, 0.0, 15.0, 9.3, 10.3, 13.4, 11.1, 15.5, 14.8, 11.2, 14.5, 10.8, 11.8, 11.0], "商品卡": [0.0, 0.0, 0.0, 0.0, 0.0, 32.9, 29.7, 30.8, 32.5, 34.2, 27.2, 29.3, 28.2, 22.6, 17.0, 19.2, 24.8]}}, "forever key": {"valid_n": 12, "months": ["2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07"], "total": 0.0, "has_sales": false, "ch_struct": {"自播": 8.9, "达播": 13.5, "自营短视频": 50.0, "达短": 9.0, "商品卡": 17.6}, "ch_sales": {}, "monthly_pct": {"自播": [6.5, 7.5, 6.9, 7.9, 7.1, 9.8, 11.9, 9.3, 9.6, 9.9, 9.7, 10.2], "达播": [20.4, 21.0, 16.6, 16.0, 13.1, 11.8, 12.3, 10.5, 11.0, 11.4, 8.9, 9.0], "自营短视频": [42.7, 45.3, 48.1, 50.6, 53.5, 50.0, 53.0, 54.0, 48.7, 48.5, 54.2, 51.2], "达短": [14.6, 9.2, 10.2, 6.6, 6.1, 9.0, 5.1, 8.2, 11.2, 10.2, 8.2, 8.9], "商品卡": [15.1, 16.3, 17.5, 18.1, 19.5, 18.6, 16.9, 17.0, 18.1, 18.4, 17.3, 18.6]}}};const BRAND_TAG={"BABI": "短视频 + 商品卡驱动型", "三资堂": "极致短视频爆发型", "Girls Crush": "五渠道均衡分销型", "forever key": "短视频 + 货架成熟型"};</script><script>
+// 目录交互
+document.querySelectorAll('.nav-item').forEach(el=>{
+  el.addEventListener('click',()=>{
+    document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
+    el.classList.add('active');
+    const t=document.getElementById(el.dataset.target);
+    if(t) t.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+});
+// 滚动高亮
+window.addEventListener('scroll',()=>{
+  const items=document.querySelectorAll('.nav-item');
+  let cur=items[0];
+  items.forEach(el=>{const s=document.getElementById(el.dataset.target); if(s&&s.getBoundingClientRect().top<140) cur=el;});
+  items.forEach(x=>x.classList.remove('active')); cur.classList.add('active');
+});
 
-<!-- 品牌总览卡片 -->
-<div class="section">
-<div class="st">L0 · 品牌概览</div>
-<div class="sd">四品牌17个月核心指标对比一览</div>
-<table class="c">
-<thead>
-<tr><th>指标</th><th>BABI</th><th>三资堂</th><th>Girls Crush</th><th>forever key</th></tr>
-</thead>
-<tbody>
-<tr><td style="font-weight:600;background:#f8f6fa">出现月数</td>
-<td>17/17</td>
-<td>3/17</td>
-<td>17/17</td>
-<td>17/17</td></tr>
-<tr><td style="font-weight:600;background:#f8f6fa">累计GMV（万元）</td>
-<td><b>12877.9</b></td>
-<td><b>3836.0</b></td>
-<td><b>15447.2</b></td>
-<td><b>23274.7</b></td></tr>
-<tr><td style="font-weight:600;background:#f8f6fa">月均GMV（万元）</td>
-<td>757.5</td>
-<td>1278.7</td>
-<td>908.7</td>
-<td>1369.1</td></tr>
-<tr><td style="font-weight:600;background:#f8f6fa">26年4-7月均值（万元）</td>
-<td>1457.0</td>
-<td>959.0</td>
-<td>1130.1</td>
-<td>1036.5</td></tr>
-<tr><td style="font-weight:600;background:#f8f6fa">峰值GMV（万元/月份）</td>
-<td>1675.7（2026/01）</td>
-<td>2448.7（2026/07）</td>
-<td>1395.5（2026/01）</td>
-<td>1978.8（2025/03）</td></tr>
-<tr><td style="font-weight:600;background:#f8f6fa">26年7月排名</td>
-<td style="font-weight:700;">#2</td>
-<td style="font-weight:700;">#1</td>
-<td style="font-weight:700;">#4</td>
-<td style="font-weight:700;">#3</td></tr>
-<tr><td style="font-weight:600;background:#f8f6fa">历史最好排名</td>
-<td>#1</td>
-<td>#1</td>
-<td>#2</td>
-<td>#1</td></tr>
-<tr><td style="font-weight:600;background:#f8f6fa">26年7月市占率</td>
-<td>6.4%</td>
-<td>14.5%</td>
-<td>5.0%</td>
-<td>5.4%</td></tr>
-<tr><td style="font-weight:600;background:#f8f6fa">平均件单价（元）</td>
-<td>50.6</td>
-<td>77.3</td>
-<td>61.2</td>
-<td>35.0</td></tr>
-</tbody>
-</table>
-<div class="conclude"><div class="ct">▲ 板块结论</div><div class="cd">四品牌呈现<b>三种截然不同的成长路径</b>：forever key为"常青型"（17个月全勤，累计GMV 2.33亿领跑，但近4月均值1037万已下滑）；BABI为"爆发型"（25年3月仅8万→26年4-6月连续登顶，26年4-7月均值1457万为四品牌最高）；三资堂为"火箭型"（25年零数据，26年5月才出现即达227万，7月暴增至2449万登顶）；Girls Crush为"稳健型"（始终在#2-#6区间稳定输出，月均909万）。四品牌客单价分层明显：三资堂77元>Girls Crush61元>BABI47元>forever key35元。</div></div>
-</div>
+const D=window.Chart; D.defaults.font.family='-apple-system,"PingFang SC",sans-serif'; D.defaults.color='#8a7d67';
 
-<!-- L1: GMV趋势 -->
-<div class="section">
-<div class="st">L1 · GMV月度趋势对比</div>
-<div class="sd">品牌月度销售额（万元） | <span style="color:#3a6b8a;font-size:11px">💡 点击图例可隐藏/显示品牌曲线</span></div>
-<div class="chart-w"><canvas id="chGMV"></canvas></div>
-<div class="conclude"><div class="ct">▲ 板块结论</div><div class="cd">GMV走势揭示<b>"王者轮换"节奏加快</b>：25年forever key一直领跑（月均1300-1900万），26年初BABI反超登顶（连续3个月#1），6月起三资堂异军突起，7月以2449万登顶。26年4-7月，BABI月均1457万仍为四品牌最高。三资堂从0到2449万仅用2个月，创遮瑕品类增速纪录。Girls Crush走势平稳，维持在800-1400万区间，波动幅度最小。</div></div>
-</div>
-<script>
-const mLabels = ["2025/03", "2025/04", "2025/05", "2025/06", "2025/07", "2025/08", "2025/09", "2025/10", "2025/11", "2025/12", "2026/01", "2026/02", "2026/03", "2026/04", "2026/05", "2026/06", "2026/07"];
-new Chart(document.getElementById('chGMV'), {type:'line', data:{labels:mLabels, datasets:[
-  {label:"BABI", data:[7.87, 44.65, 53.64, 126.6, 192.97, 183.37, 231.92, 328.55, 597.81, 833.93, 1675.69, 1529.97, 1243.07, 1622.26, 1527.22, 1602.02, 1076.37], borderColor:"#D4533A", backgroundColor:"#D4533A22", borderWidth:2.5, pointRadius:4, tension:0.3, fill:false},
-  {label:"三资堂", data:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 226.53, 1160.85, 2448.66], borderColor:"#1A5E2A", backgroundColor:"#1A5E2A22", borderWidth:2.5, pointRadius:4, tension:0.3, fill:false},
-  {label:"Girls Crush", data:[545.78, 585.41, 526.64, 493.89, 792.81, 668.35, 862.97, 1162.75, 903.6, 1057.84, 1395.53, 906.68, 1024.62, 1229.9, 1385.1, 1061.45, 843.86], borderColor:"#6A4A9A", backgroundColor:"#6A4A9A22", borderWidth:1.5, pointRadius:0, tension:0.3, fill:false},
-  {label:"forever key", data:[1978.76, 1349.44, 1295.82, 1906.5, 1696.76, 1507.18, 1381.25, 1249.8, 1114.87, 1296.75, 1417.55, 1590.21, 1343.8, 1157.36, 1043.23, 1026.7, 918.75], borderColor:"#3A6B8A", backgroundColor:"#3A6B8A22", borderWidth:2.5, pointRadius:4, tension:0.3, fill:false},
-]},
-options:{responsive:true, maintainAspectRatio:false, interaction:{mode:'index', intersect:false},
-  plugins:{legend:{position:'bottom', labels:{font:{size:11}, usePointStyle:true, boxWidth:14}},
-    tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.parsed.y.toFixed(0)+'万'}}},
-  scales:{y:{ticks:{callback:v=>Math.round(v)+'万'}, grid:{color:'#f0edf6'}},
-    x:{grid:{display:false}}}}});
-</script>
+// 1. 渠道结构总览（横向100%堆叠柱）
+new D(document.getElementById('chStruct'),{
+  type:'bar',
+  data:{labels:Object.keys(OVERVIEW),datasets:CHANNELS.map(c=>({label:c,data:Object.values(OVERVIEW).map(b=>b[c]),backgroundColor:CH_COLOR[c],maxBarThickness:46}))},
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,scales:{x:{stacked:true,max:100,ticks:{callback:v=>v+'%'}},y:{stacked:true}},plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': '+ctx.parsed.x+'%'}}}}
+});
 
-<!-- L2: 市占率趋势 -->
-<div class="section">
-<div class="st">L2 · 品牌市占率月度趋势</div>
-<div class="sd">品牌销售额 ÷ 全类目GMV × 100% | <span style="color:#3a6b8a;font-size:11px">💡 点击图例可隐藏/显示品牌曲线</span></div>
-<div class="chart-w"><canvas id="chMS"></canvas></div>
-<div class="conclude"><div class="ct">▲ 板块结论</div><div class="cd">三资堂市占率从0%飙升至26年7月的<b>14.5%</b>，刷新遮瑕品类单品牌市占率纪录（此前最高为forever key在25年3月的16.8%）。BABI市占率在26年4-6月达到9.2%高点后7月回落至6.4%，与三资堂爆发直接对应——三资堂抢占了BABI失去的份额。三资堂+14.5%、BABI 6.4%、forever key 5.4%、Girls Crush 5.0%，<b>TOP4合计31.3%</b>，超过遮瑕品类CR3的26.3%，显示头部4家已形成新的竞争格局。</div></div>
-</div>
-<script>
-new Chart(document.getElementById('chMS'), {type:'line', data:{labels:mLabels, datasets:[
-  {label:"BABI", data:[0.1, 0.4, 0.4, 1.1, 1.7, 1.5, 1.9, 2.2, 4.6, 5.1, 7.8, 8.8, 7.3, 9.2, 8.0, 9.2, 6.4], borderColor:"#D4533A", backgroundColor:"#D4533A22", borderWidth:2.5, pointRadius:4, tension:0.3, fill:false},
-  {label:"三资堂", data:[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.2, 6.6, 14.5], borderColor:"#1A5E2A", backgroundColor:"#1A5E2A22", borderWidth:2.5, pointRadius:4, tension:0.3, fill:false},
-  {label:"Girls Crush", data:[4.6, 5.7, 4.2, 4.2, 7.2, 5.3, 7.0, 7.7, 6.9, 6.5, 6.5, 5.2, 6.0, 7.0, 7.2, 6.1, 5.0], borderColor:"#6A4A9A", backgroundColor:"#6A4A9A22", borderWidth:1.5, pointRadius:0, tension:0.3, fill:false},
-  {label:"forever key", data:[16.8, 13.1, 10.2, 16.2, 15.4, 11.9, 11.2, 8.2, 8.5, 8.0, 6.6, 9.1, 7.9, 6.6, 5.4, 5.9, 5.4], borderColor:"#3A6B8A", backgroundColor:"#3A6B8A22", borderWidth:2.5, pointRadius:4, tension:0.3, fill:false},
-]},
-options:{responsive:true, maintainAspectRatio:false, interaction:{mode:'index', intersect:false},
-  plugins:{legend:{position:'bottom', labels:{font:{size:11}, usePointStyle:true, boxWidth:14}},
-    tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.parsed.y.toFixed(1)+'%'}}},
-  scales:{y:{ticks:{callback:v=>v+'%'}, grid:{color:'#f0edf6'}},
-    x:{grid:{display:false}}}}});
-</script>
+// 2. 月度GMV趋势
+new D(document.getElementById('chGmv'),{
+  type:'line',
+  data:{labels:GMV_LABELS,datasets:Object.keys(GMV).map(b=>({label:b,data:GMV[b],borderColor:BRAND_COLOR[b],backgroundColor:BRAND_COLOR[b]+'22',tension:.3,fill:false,pointRadius:2,borderWidth:2}))},
+  options:{responsive:true,maintainAspectRatio:false,scales:{y:{title:{display:true,text:'万元'}}},plugins:{legend:{position:'top'}}}
+});
 
-<!-- L3: 排名变化 -->
-<div class="section">
-<div class="st">L3 · 品牌排名月度变化</div>
-<div class="sd">四品牌在遮瑕品类月度TOP100中的排位变迁 | 排名数字越小越靠前</div>
-<div class="chart-w"><canvas id="chRank"></canvas></div>
-<div class="conclude"><div class="ct">▲ 板块结论</div><div class="cd">排名轨迹清晰反映<b>各自生命周期</b>：forever key从#1持续下滑至#3-#4（抛物线下降期）；BABI从#80一路火箭升至#1后稳定在#1-#2（成熟登顶期）；三资堂#空→#19→#2→#1（爆发冲顶期）；Girls Crush在#2-#6区间窄幅波动（稳定期）。<b>26年7月格局</b>：#1三资堂(新王)、#2 BABI(挑战者)、#3 forever key(常青树)、#4 Girls Crush(稳守者)。</div></div>
-</div>
-<script>
-new Chart(document.getElementById('chRank'), {type:'line', data:{labels:mLabels, datasets:[
-  {label:"BABI", data:[80, 42, 43, 17, 14, 15, 13, 12, 7, 6, 2, 2, 2, 1, 1, 1, 2], borderColor:"#D4533A", backgroundColor:"#D4533A22", borderWidth:2.5, pointRadius:4, tension:0.3, fill:false},
-  {label:"三资堂", data:[null, null, null, null, null, null, null, null, null, null, null, null, null, null, 19, 2, 1], borderColor:"#1A5E2A", backgroundColor:"#1A5E2A22", borderWidth:2.5, pointRadius:4, tension:0.3, fill:false},
-  {label:"Girls Crush", data:[3, 3, 5, 5, 2, 5, 3, 4, 3, 3, 5, 6, 5, 3, 2, 3, 4], borderColor:"#6A4A9A", backgroundColor:"#6A4A9A22", borderWidth:1.5, pointRadius:0, tension:0.3, fill:false},
-  {label:"forever key", data:[1, 1, 2, 1, 1, 1, 2, 3, 2, 2, 3, 1, 1, 4, 7, 4, 3], borderColor:"#3A6B8A", backgroundColor:"#3A6B8A22", borderWidth:2.5, pointRadius:4, tension:0.3, fill:false}]},
-options:{responsive:true, maintainAspectRatio:false, interaction:{mode:'index', intersect:false},
-  plugins:{legend:{position:'bottom', labels:{font:{size:11}, usePointStyle:true, boxWidth:14}},
-    tooltip:{callbacks:{label:c=>c.dataset.label+': #'+c.parsed.y}}},
-  scales:{y:{reverse:true, ticks:{callback:v=>'#'+v}, grid:{color:'#f0edf6'}},
-    x:{grid:{display:false}}}}});
-</script>
+// 每品牌：环形图 + 堆叠面积
+Object.keys(BRAND_DATA).forEach(b=>{
+  const d=BRAND_DATA[b];
+  const labels=CHANNELS, vals=CHANNELS.map(c=>d.ch_struct[c]);
+  // 环形图
+  new D(document.getElementById('donut_'+b),{
+    type:'doughnut',
+    data:{labels,datasets:[{data:vals,backgroundColor:CHANNELS.map(c=>CH_COLOR[c]),borderWidth:2,borderColor:'#fff'}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'58%',plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}},tooltip:{callbacks:{label:ctx=>ctx.label+': '+ctx.parsed+'%'}}}}
+  });
+  // 堆叠面积（占比）
+  const ds=CHANNELS.map(c=>({label:c,data:d.monthly_pct[c],backgroundColor:CH_COLOR[c]+'cc',borderColor:CH_COLOR[c],fill:true,tension:.3,pointRadius:0,borderWidth:1}));
+  new D(document.getElementById('stack_'+b),{
+    type:'line',
+    data:{labels:d.months,datasets:ds},
+    options:{responsive:true,maintainAspectRatio:false,scales:{x:{grid:{display:false}},y:{stacked:true,max:100,ticks:{callback:v=>v+'%'}}},plugins:{legend:{position:'top',labels:{boxWidth:10,font:{size:10}}},tooltip:{mode:'index',intersect:false}}}
+  });
+});
 
-<!-- L4: 件单价趋势 -->
-<div class="section">
-<div class="st">L4 · 品牌件单价月度趋势</div>
-<div class="sd">件单价 = 品牌销售额 ÷ 品牌销量（元） | <span style="color:#3a6b8a;font-size:11px">💡 点击图例可隐藏/显示品牌曲线</span></div>
-<div class="chart-w"><canvas id="chASP"></canvas></div>
-<div class="conclude"><div class="ct">▲ 板块结论</div><div class="cd">四品牌件单价<b>硬性分层</b>：三资堂（77-79元）定位<font color="#D4533A">高价区</font>、Girls Crush（58-69元）中高价区、BABI（46-56元）中价区、forever key（34-37元）低价区。三资堂以最高客单价（79元）登顶，验证"高客单+精准人群"路线在遮瑕品类同样可行。与之对比，forever key以35元件单价长期霸榜，走了"低价广覆盖"路线——<b>两条路径都能登顶</b>。</div></div>
-</div>
-<script>
-new Chart(document.getElementById('chASP'), {type:'line', data:{labels:mLabels, datasets:[
-  {label:"BABI", data:[23.9, 46.0, 47.7, 53.2, 55.0, 52.8, 49.8, 51.5, 50.7, 52.9, 54.4, 54.8, 55.3, 54.9, 51.5, 50.8, 55.6], borderColor:"#D4533A", backgroundColor:"#D4533A22", borderWidth:2.5, pointRadius:4, tension:0.3, fill:false, spanGaps:true},
-  {label:"三资堂", data:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 74.3, 78.5, 79.2], borderColor:"#1A5E2A", backgroundColor:"#1A5E2A22", borderWidth:2.5, pointRadius:4, tension:0.3, fill:false, spanGaps:true},
-  {label:"Girls Crush", data:[66.2, 59.6, 58.9, 58.0, 58.6, 56.2, 60.9, 60.8, 58.7, 58.0, 59.1, 61.3, 62.0, 64.8, 65.3, 68.5, 63.2], borderColor:"#6A4A9A", backgroundColor:"#6A4A9A22", borderWidth:1.5, pointRadius:0, tension:0.3, fill:false, spanGaps:true},
-  {label:"forever key", data:[35.2, 34.9, 34.5, 34.8, 35.3, 35.2, 35.0, 35.0, 34.3, 34.0, 34.6, 35.1, 36.5, 35.4, 35.9, 35.6, 34.4], borderColor:"#3A6B8A", backgroundColor:"#3A6B8A22", borderWidth:2.5, pointRadius:4, tension:0.3, fill:false, spanGaps:true}]},
-options:{responsive:true, maintainAspectRatio:false, interaction:{mode:'index', intersect:false},
-  plugins:{legend:{position:'bottom', labels:{font:{size:11}, usePointStyle:true, boxWidth:14}},
-    tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.parsed.y.toFixed(0)+'元'}}},
-  scales:{y:{ticks:{callback:v=>Math.round(v)+'元'}, grid:{color:'#f0edf6'}},
-    x:{grid:{display:false}}}}});
-</script>
+// 动态结论
+function fmtPct(b,c){return BRAND_DATA[b].ch_struct[c]+'%';}
+document.getElementById('concl-struct').innerHTML='<div class="ct">▲ 板块结论</div><div class="cd">'
+  +'四品牌渠道结构呈现<b>明显分层</b>：<b>三资堂</b>最极端——自营短视频占比高达 <b>'+fmtPct('三资堂','自营短视频')+'</b>，几乎纯靠短视频起量；<b>BABI</b>短视频主导（'+fmtPct('BABI','自营短视频')+'）但商品卡（'+fmtPct('BABI','商品卡')+'）与达播（'+fmtPct('BABI','达播')+'）已形成第二增长极；<b>Girls Crush</b>最均衡，五大渠道均有贡献（短视频 '+fmtPct('Girls Crush','自营短视频')+'、商品卡 '+fmtPct('Girls Crush','商品卡')+'、达短 '+fmtPct('Girls Crush','达短')+'）；<b>forever key</b>短视频过半（'+fmtPct('forever key','自营短视频')+'）且达播占比四品牌最高（'+fmtPct('forever key','达播')+'）。<b>共性</b>：自播占比四品牌普遍偏低（均不足10%），说明遮瑕品类当前以「短视频引流 + 货架承接」为主，品牌自播能力尚在培育期。</div>';
 
-<!-- L5: 完整数据表 -->
-<div class="section">
-<div class="st">L5 · 四品牌完整月度数据表</div>
-<div class="sd">GMV(万元) / 排名 / 市占率(%) / 件单价(元) 逐月明细</div>
-<div style="font-size:12px;font-weight:700;color:#D4533A;margin:10px 0 4px 0;">▌BABI</div>
-<table class="c">
-<thead><tr><th>月份</th><th>GMV(万)</th><th>排名</th><th>市占率</th><th>件单价(元)</th><th>销量(件)</th><th>购买人数</th></tr></thead>
-<tbody>
-<tr><td>2025/03</td><td>7.87</td><td>#80</td><td>0.1%</td><td>23.9</td><td>3296</td><td>3287</td></tr>
-<tr><td>2025/04</td><td>44.65</td><td>#42</td><td>0.4%</td><td>46.0</td><td>9699</td><td>9189</td></tr>
-<tr><td>2025/05</td><td>53.64</td><td>#43</td><td>0.4%</td><td>47.7</td><td>11243</td><td>10924</td></tr>
-<tr><td>2025/06</td><td>126.6</td><td>#17</td><td>1.1%</td><td>53.2</td><td>23798</td><td>23161</td></tr>
-<tr><td>2025/07</td><td>192.97</td><td>#14</td><td>1.7%</td><td>55.0</td><td>35057</td><td>34289</td></tr>
-<tr><td>2025/08</td><td>183.37</td><td>#15</td><td>1.5%</td><td>52.8</td><td>34746</td><td>33421</td></tr>
-<tr><td>2025/09</td><td>231.92</td><td>#13</td><td>1.9%</td><td>49.8</td><td>46607</td><td>44652</td></tr>
-<tr><td>2025/10</td><td>328.55</td><td>#12</td><td>2.2%</td><td>51.5</td><td>63767</td><td>59445</td></tr>
-<tr><td>2025/11</td><td>597.81</td><td>#7</td><td>4.6%</td><td>50.7</td><td>118008</td><td>109860</td></tr>
-<tr><td>2025/12</td><td>833.93</td><td>#6</td><td>5.1%</td><td>52.9</td><td>157592</td><td>146928</td></tr>
-<tr><td>2026/01</td><td>1675.69</td><td>#2</td><td>7.8%</td><td>54.4</td><td>308308</td><td>290287</td></tr>
-<tr><td>2026/02</td><td>1529.97</td><td>#2</td><td>8.8%</td><td>54.8</td><td>279108</td><td>264417</td></tr>
-<tr><td>2026/03</td><td>1243.07</td><td>#2</td><td>7.3%</td><td>55.3</td><td>224726</td><td>212761</td></tr>
-<tr><td>2026/04</td><td>1622.26</td><td>#1</td><td>9.2%</td><td>54.9</td><td>295573</td><td>278880</td></tr>
-<tr><td>2026/05</td><td>1527.22</td><td>#1</td><td>8.0%</td><td>51.5</td><td>296586</td><td>281823</td></tr>
-<tr><td>2026/06</td><td>1602.02</td><td>#1</td><td>9.2%</td><td>50.8</td><td>315433</td><td>299433</td></tr>
-<tr><td>2026/07</td><td>1076.37</td><td>#2</td><td>6.4%</td><td>55.6</td><td>193574</td><td>183335</td></tr>
-</tbody></table>
-<div style="font-size:12px;font-weight:700;color:#1A5E2A;margin:14px 0 4px 0;">▌三资堂</div>
-<table class="c">
-<thead><tr><th>月份</th><th>GMV(万)</th><th>排名</th><th>市占率</th><th>件单价(元)</th><th>销量(件)</th><th>购买人数</th></tr></thead>
-<tbody>
-<tr><td>2025/03</td><td>—</td><td>—</td><td>0.0%</td><td>—</td><td>—</td><td>—</td></tr>
-<tr><td>2025/04</td><td>—</td><td>—</td><td>0.0%</td><td>—</td><td>—</td><td>—</td></tr>
-<tr><td>2025/05</td><td>—</td><td>—</td><td>0.0%</td><td>—</td><td>—</td><td>—</td></tr>
-<tr><td>2025/06</td><td>—</td><td>—</td><td>0.0%</td><td>—</td><td>—</td><td>—</td></tr>
-<tr><td>2025/07</td><td>—</td><td>—</td><td>0.0%</td><td>—</td><td>—</td><td>—</td></tr>
-<tr><td>2025/08</td><td>—</td><td>—</td><td>0.0%</td><td>—</td><td>—</td><td>—</td></tr>
-<tr><td>2025/09</td><td>—</td><td>—</td><td>0.0%</td><td>—</td><td>—</td><td>—</td></tr>
-<tr><td>2025/10</td><td>—</td><td>—</td><td>0.0%</td><td>—</td><td>—</td><td>—</td></tr>
-<tr><td>2025/11</td><td>—</td><td>—</td><td>0.0%</td><td>—</td><td>—</td><td>—</td></tr>
-<tr><td>2025/12</td><td>—</td><td>—</td><td>0.0%</td><td>—</td><td>—</td><td>—</td></tr>
-<tr><td>2026/01</td><td>—</td><td>—</td><td>0.0%</td><td>—</td><td>—</td><td>—</td></tr>
-<tr><td>2026/02</td><td>—</td><td>—</td><td>0.0%</td><td>—</td><td>—</td><td>—</td></tr>
-<tr><td>2026/03</td><td>—</td><td>—</td><td>0.0%</td><td>—</td><td>—</td><td>—</td></tr>
-<tr><td>2026/04</td><td>—</td><td>—</td><td>0.0%</td><td>—</td><td>—</td><td>—</td></tr>
-<tr><td>2026/05</td><td>226.53</td><td>19</td><td>1.2%</td><td>74.3</td><td>30484</td><td>29648</td></tr>
-<tr><td>2026/06</td><td>1160.85</td><td>2</td><td>6.6%</td><td>78.5</td><td>147885</td><td>143659</td></tr>
-<tr><td>2026/07</td><td>2448.66</td><td>1</td><td>14.5%</td><td>79.2</td><td>309041</td><td>300274</td></tr>
-</tbody></table>
-<div style="font-size:12px;font-weight:700;color:#6A4A9A;margin:14px 0 4px 0;">▌Girls Crush</div>
-<table class="c">
-<thead><tr><th>月份</th><th>GMV(万)</th><th>排名</th><th>市占率</th><th>件单价(元)</th><th>销量(件)</th><th>购买人数</th></tr></thead>
-<tbody>
-<tr><td>2025/03</td><td>545.78</td><td>#3</td><td>4.6%</td><td>66.2</td><td>82462</td><td>70385</td></tr>
-<tr><td>2025/04</td><td>585.41</td><td>#3</td><td>5.7%</td><td>59.6</td><td>98223</td><td>83367</td></tr>
-<tr><td>2025/05</td><td>526.64</td><td>#5</td><td>4.2%</td><td>58.9</td><td>89423</td><td>76578</td></tr>
-<tr><td>2025/06</td><td>493.89</td><td>#5</td><td>4.2%</td><td>58.0</td><td>85190</td><td>71540</td></tr>
-<tr><td>2025/07</td><td>792.81</td><td>#2</td><td>7.2%</td><td>58.6</td><td>135208</td><td>113013</td></tr>
-<tr><td>2025/08</td><td>668.35</td><td>#5</td><td>5.3%</td><td>56.2</td><td>118941</td><td>97518</td></tr>
-<tr><td>2025/09</td><td>862.97</td><td>#3</td><td>7.0%</td><td>60.9</td><td>141798</td><td>116552</td></tr>
-<tr><td>2025/10</td><td>1162.75</td><td>#4</td><td>7.7%</td><td>60.8</td><td>191200</td><td>155641</td></tr>
-<tr><td>2025/11</td><td>903.6</td><td>#3</td><td>6.9%</td><td>58.7</td><td>153986</td><td>127304</td></tr>
-<tr><td>2025/12</td><td>1057.84</td><td>#3</td><td>6.5%</td><td>58.0</td><td>182287</td><td>149138</td></tr>
-<tr><td>2026/01</td><td>1395.53</td><td>#5</td><td>6.5%</td><td>59.1</td><td>236268</td><td>198601</td></tr>
-<tr><td>2026/02</td><td>906.68</td><td>#6</td><td>5.2%</td><td>61.3</td><td>147808</td><td>128803</td></tr>
-<tr><td>2026/03</td><td>1024.62</td><td>#5</td><td>6.0%</td><td>62.0</td><td>165189</td><td>141642</td></tr>
-<tr><td>2026/04</td><td>1229.9</td><td>#3</td><td>7.0%</td><td>64.8</td><td>189768</td><td>156192</td></tr>
-<tr><td>2026/05</td><td>1385.1</td><td>#2</td><td>7.2%</td><td>65.3</td><td>211959</td><td>183059</td></tr>
-<tr><td>2026/06</td><td>1061.45</td><td>#3</td><td>6.1%</td><td>68.5</td><td>155008</td><td>132183</td></tr>
-<tr><td>2026/07</td><td>843.86</td><td>#4</td><td>5.0%</td><td>63.2</td><td>133457</td><td>116314</td></tr>
-</tbody></table>
-<div style="font-size:12px;font-weight:700;color:#3A6B8A;margin:14px 0 4px 0;">▌forever key</div>
-<table class="c">
-<thead><tr><th>月份</th><th>GMV(万)</th><th>排名</th><th>市占率</th><th>件单价(元)</th><th>销量(件)</th><th>购买人数</th></tr></thead>
-<tbody>
-<tr><td>2025/03</td><td>1978.76</td><td>#1</td><td>16.8%</td><td>35.2</td><td>562264</td><td>390579</td></tr>
-<tr><td>2025/04</td><td>1349.44</td><td>#1</td><td>13.1%</td><td>34.9</td><td>386336</td><td>285979</td></tr>
-<tr><td>2025/05</td><td>1295.82</td><td>#2</td><td>10.2%</td><td>34.5</td><td>375388</td><td>269830</td></tr>
-<tr><td>2025/06</td><td>1906.5</td><td>#1</td><td>16.2%</td><td>34.8</td><td>547711</td><td>385176</td></tr>
-<tr><td>2025/07</td><td>1696.76</td><td>#1</td><td>15.4%</td><td>35.3</td><td>480589</td><td>351522</td></tr>
-<tr><td>2025/08</td><td>1507.18</td><td>#1</td><td>11.9%</td><td>35.2</td><td>427742</td><td>322971</td></tr>
-<tr><td>2025/09</td><td>1381.25</td><td>#2</td><td>11.2%</td><td>35.0</td><td>394412</td><td>296613</td></tr>
-<tr><td>2025/10</td><td>1249.8</td><td>#3</td><td>8.2%</td><td>35.0</td><td>356957</td><td>268654</td></tr>
-<tr><td>2025/11</td><td>1114.87</td><td>#2</td><td>8.5%</td><td>34.3</td><td>324785</td><td>242459</td></tr>
-<tr><td>2025/12</td><td>1296.75</td><td>#2</td><td>8.0%</td><td>34.0</td><td>381107</td><td>284575</td></tr>
-<tr><td>2026/01</td><td>1417.55</td><td>#3</td><td>6.6%</td><td>34.6</td><td>410130</td><td>307972</td></tr>
-<tr><td>2026/02</td><td>1590.21</td><td>#1</td><td>9.1%</td><td>35.1</td><td>452543</td><td>342937</td></tr>
-<tr><td>2026/03</td><td>1343.8</td><td>#1</td><td>7.9%</td><td>36.5</td><td>367935</td><td>284588</td></tr>
-<tr><td>2026/04</td><td>1157.36</td><td>#4</td><td>6.6%</td><td>35.4</td><td>327368</td><td>248581</td></tr>
-<tr><td>2026/05</td><td>1043.23</td><td>#7</td><td>5.4%</td><td>35.9</td><td>290420</td><td>226537</td></tr>
-<tr><td>2026/06</td><td>1026.7</td><td>#4</td><td>5.9%</td><td>35.6</td><td>288465</td><td>227055</td></tr>
-<tr><td>2026/07</td><td>918.75</td><td>#3</td><td>5.4%</td><td>34.4</td><td>266883</td><td>208677</td></tr>
-</tbody></table>
-<div class="conclude"><div class="ct">▲ 板块结论</div><div class="cd">逐月数据可交叉验证品牌生命周期：<b>三资堂</b>25年3月-26年4月无数据，26年5月首现即227万(#19)，6月1161万(#2)跃升，7月2449万(#1)登顶——是遮瑕品类史上最快登顶纪录。<b>BABI</b>25年3月仅7.9万(#80)，26年1月破1676万(#2)，4-6月连续登顶，7月回落至1076万(#2)。<b>Girls Crush</b>波动最小（标准差最小），始终在前5名区间。forever key从25年月均1500万逐步下降至26年月均1000万左右，呈缓慢下行趋势，但始终守住前3-4名。</div></div>
-</div>
-
-<div class="footer">抖音遮瑕品牌四巨头月度数据对比分析 | 数据周期：25年3月 - 26年7月（17个月） | 平台：抖音 | 单位：万元</div>
-</div>
-</body>
-</html>
+const concl_map={
+  'BABI':'<b>短视频+商品卡双轮驱动</b>：自营短视频占 '+fmtPct('BABI','自营短视频')+' 为绝对主力，商品卡 '+fmtPct('BABI','商品卡')+' 承接货架流量，达播 '+fmtPct('BABI','达播')+' 已形成稳定增量；自播（'+fmtPct('BABI','自播')+'）与达短（'+fmtPct('BABI','达短')+'）占比偏低，达人短视频分销与品牌自播是潜在短板。',
+  '三资堂':'<b>极致短视频爆发</b>：26年5月入局即自营短视频占 '+fmtPct('三资堂','自营短视频')+'，靠单一大单品短视频投流快速冲顶。26年7月起才开始补自播（'+fmtPct('三资堂','自播')+'）与达播（'+fmtPct('三资堂','达播')+'），呈现「短视频引流→直播承接」的典型起量路径，但达短（'+fmtPct('三资堂','达短')+'）几乎空白、商品卡（'+fmtPct('三资堂','商品卡')+'）占比低，货架承接能力待补。',
+  'Girls Crush':'<b>五渠道最均衡</b>：自营短视频 '+fmtPct('Girls Crush','自营短视频')+' 领先但不过半，商品卡 '+fmtPct('Girls Crush','商品卡')+' 为四品牌最高，达短 '+fmtPct('Girls Crush','达短')+' 也是四品牌最高——达人短视频分销成熟、货架电商沉淀深，抗风险能力最强，但缺乏单一爆发渠道，增长偏稳。',
+  'forever key':'<b>短视频+货架成熟型</b>：自营短视频约 '+fmtPct('forever key','自营短视频')+'，商品卡 '+fmtPct('forever key','商品卡')+'，达播 '+fmtPct('forever key','达播')+' 四品牌最高，达短 '+fmtPct('forever key','达短')+'、自播 '+fmtPct('forever key','自播')+' 也均有基础——渠道结构最接近成熟品牌形态（注：总销售额字段缺失，占比为月度均值口径）。',
+};
+Object.keys(concl_map).forEach(b=>{
+  document.getElementById('concl_'+b).innerHTML='<div class="ct">▲ 板块结论</div><div class="cd">'+concl_map[b]+'</div>';
+});
+</script></body></html>
