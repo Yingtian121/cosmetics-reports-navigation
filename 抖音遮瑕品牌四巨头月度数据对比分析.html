@@ -30,11 +30,12 @@ section{margin-bottom:34px;}
 .sec-title{display:flex;align-items:center;gap:10px;font-size:19px;font-weight:700;margin-bottom:6px;color:var(--ink);}
 .sec-title .bar{width:4px;height:22px;background:var(--gold);border-radius:2px;}
 .sec-desc{font-size:12.5px;color:var(--sub);margin-bottom:18px;line-height:1.6;}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin-bottom:18px;box-shadow:0 2px 8px rgba(0,0,0,.03);}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin-bottom:18px;box-shadow:0 2px 8px rgba(0,0,0,.03);display:flex;flex-direction:column;}
 .card .ct{font-size:15px;font-weight:700;margin-bottom:6px;color:var(--ink);}
 .card .cs{font-size:11.5px;color:var(--sub);margin-bottom:14px;}
-.chart-w{position:relative;height:340px;}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.chart-w{position:relative;height:340px;flex:1;min-height:280px;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:stretch;}
+.grid2 > .card{margin-bottom:0;}
 @media(max-width:900px){.grid2{grid-template-columns:1fr;}.sidebar{width:210px;}.main{margin-left:210px;padding:20px;}}
 .brand-head{border-radius:14px;padding:24px 28px;color:#fff;margin-bottom:18px;}
 .brand-head .bt{font-size:20px;font-weight:700;}
@@ -55,7 +56,7 @@ section{margin-bottom:34px;}
 .calc-note-text{font-size:11px;color:#8a7d67;line-height:1.5;}
 .stack-hint{font-size:10.5px;color:#a99a7f;margin:4px 0 10px;padding:6px 10px;background:#fbf8f0;border:1px solid #eee6d5;border-radius:6px;line-height:1.5;}
 .stack-hint b{color:#6b5e47;font-weight:600;}
-.sub-concl{margin-top:10px;padding:8px 10px;background:#f8f4ec;border-radius:6px;font-size:11.5px;color:#6b5e47;line-height:1.6;}
+.sub-concl{margin-top:auto;padding:8px 10px;background:#f8f4ec;border-radius:6px;font-size:11.5px;color:#6b5e47;line-height:1.6;}
 .sub-concl b{color:#3a3227;}
 .hm-wrap{overflow-x:auto;margin:6px 0 4px;max-width:100%;}
 .hm-table{border-collapse:separate;border-spacing:2px;font-size:10px;}
